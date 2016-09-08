@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include tea_garden *.css
+recursive-include tea_garden *.csv
+recursive-include tea_garden *.html
+recursive-include tea_garden *.ico
+recursive-include tea_garden *.js
+recursive-include tea_garden *.json
+recursive-include tea_garden *.md
+recursive-include tea_garden *.png
+recursive-include tea_garden *.py
+recursive-include tea_garden *.svg
+recursive-include tea_garden *.txt
+recursive-exclude tea_garden *.pyc
