@@ -24,7 +24,7 @@ frappe.query_reports["Daily Green Leaf Report"] = {
 
 	]
 
-
 	
+		
 }
 
