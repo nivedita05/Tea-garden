@@ -11,11 +11,13 @@ def execute(filters=None):
 	data=[]
 	return column,data
 
-
-
+def get_date():
+	estate_name=frappe.db.sql("""select estate_name from `tabDaily Green Leaf in details`""")
+	return estate_name
 
 
 def get_columns():
+	estate=get_date()
 	columns = [{
 		"fieldname": "section_name",
 		"label": _("Section"),
@@ -23,13 +25,14 @@ def get_columns():
 		"options": "daily_green_leaf_in_details",
 		"width": 120
 	}]
-	columns.append({
-			"fieldname": "original_area",
-			"label": _("Area"),
-			"fieldtype": "Link",
-			"options": "daily_green_leaf_in_details",
-			"width": 70
-    })
+	if estate:
+		columns.append({
+				"fieldname": "original_area",
+				"label": _("Area"),
+				"fieldtype": "Link",
+				"options": "daily_green_leaf_in_details",
+				"width": 70
+	    })
 
     	columns.append({
 			"fieldname": "area",
