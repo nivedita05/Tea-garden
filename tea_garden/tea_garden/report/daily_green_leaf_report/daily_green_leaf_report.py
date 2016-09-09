@@ -4,28 +4,53 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import _
-from tea_garden.tea_garden.doctype import daily_green_leaf_in_details
+from frappe.model.document import Document
+from frappe import utils
 
 def execute(filters=None):
-	column=get_columns()
-	data=[]
-	return column,data
+	columns = get_columns()
+	report_entries = get_report_entries(filters)
+	#frappe.throw(report_entries)
+	data = []
+	
+	
 
-def get_date():
-	estate_name=frappe.db.sql("""select estate_name from `tabDaily Green Leaf in details`""")
-	return estate_name
+	for sle in report_entries:
+		data.append([sle.section_name, sle.section_area, sle.area, sle.prune_type,sle.bush_type])
+			
+	return columns, data
+
+
+	
+
+
+
+
+
+def get_report_entries(filters):
+
+	[["Section_name"=>"A","section_area"=>10.10,"area"=>12.10,"prune_type"=>"DP","bush_type"=>'M'],["Section_name"=>"A","section_area"=>10.10,"area"=>12.10,"prune_type"=>"DP","bush_type"=>'M']]
+	#return frappe.db.sql("""select date,section_name, section_area, area, prune_type, bush_type
+	#	from `tabDaily Green Leaf in details` where estate_name = %(estate_name)s and date= %(date)s {sle_conditions}""".format(sle_conditions=get_sle_conditions(filters)), filters, as_dict=1)
+
+
+
+def get_sle_conditions(filters):
+	conditions = []
+	return "and {}".format(" and ".join(conditions)) if conditions else ""
+
 
 
 def get_columns():
-	estate=get_date()
-	columns = [{
-		"fieldname": "section_name",
-		"label": _("Section"),
-		"fieldtype": "Link",
-		"options": "daily_green_leaf_in_details",
-		"width": 120
-	}]
-	if estate:
+		
+		columns = [{
+			"fieldname": "section_name",
+			"label": _("Section"),
+			"fieldtype": "Link",
+			"options": "daily_green_leaf_in_details",
+			"width": 120
+		}]
+		
 		columns.append({
 				"fieldname": "original_area",
 				"label": _("Area"),
@@ -34,7 +59,7 @@ def get_columns():
 				"width": 70
 	    })
 
-    	columns.append({
+		columns.append({
 			"fieldname": "area",
 			"label": _("Area Plucked"),
 			"fieldtype": "Link",
@@ -45,70 +70,29 @@ def get_columns():
 		})
 
 
-    	columns.append({
-			"fieldname": "Green_leaf_per_hector",
-			"label": _("Green Leaf/Hector"),
-			"fieldtype":"Data",
-			"options": "",
+		columns.append({
+			"fieldname": "prune_type",
+			"label": _("Prune Type"),
+			"fieldtype":"Link",
+			"options": "daily_green_leaf_in_details",
 			"width":133
 		})
 
 
-    	columns.append({
-			"fieldname": "pluckers_per_hector",
-			"label": _("Pluckers/Hector"),
-			"fieldtype": "Data",
-			"options": "",
+		columns.append({
+			"fieldname": "bush_type",
+			"label": _("Bush Type"),
+			"fieldtype": "Link",
+			"options": "daily_green_leaf_in_details",
 			"width":135
 		})
 
 
-    	columns.append({
-			"fieldname": "plucking_average",
-			"label": _("Plucking Average"),
-			"fieldtype": "data",
-			"options": "",
-			"width":130
-		})
-
-
-    	columns.append({
-			"fieldname": "round",
-			"label": _("Round"),
-			"fieldtype": "data",
-			"options": "",
-			"width":90
-		})
-
-
-    	columns.append({
-			"fieldname": "r_per_days",
-			"label": _("R/Days"),
-			"fieldtype": "Float",
-			"options": "",
-			"width":90
-		})
-
-
-    	columns.append({
-			"fieldname": "yield_hector",
-			"label": _("yield/Hector"),
-			"fieldtype": "Float",
-			"options": "",
-			"width":90
-		})
-
-
-    	columns.append({
-			"fieldname": "percent_of_year_crop",
-			"label": _("% Of Year Crop"),
-			"fieldtype": "float",
-			"options": "",
-			"width":120
-		})
-
+		
+		return columns
 
 	
 	
+   
 
-	return columns
+
