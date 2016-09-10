@@ -16,7 +16,7 @@ def execute(filters=None):
 	
 
 	for sle in report_entries:
-		data.append([sle.section_name, sle.section_area, sle.area, sle.prune_type,sle.bush_type])
+		data.append([sle.section_name, sle.section_area, sle.area,sle.prune_type,sle.bush_type])
 			
 	return columns, data
 
@@ -28,10 +28,7 @@ def execute(filters=None):
 
 
 def get_report_entries(filters):
-
-	[["Section_name"=>"A","section_area"=>10.10,"area"=>12.10,"prune_type"=>"DP","bush_type"=>'M'],["Section_name"=>"A","section_area"=>10.10,"area"=>12.10,"prune_type"=>"DP","bush_type"=>'M']]
-	#return frappe.db.sql("""select date,section_name, section_area, area, prune_type, bush_type
-	#	from `tabDaily Green Leaf in details` where estate_name = %(estate_name)s and date= %(date)s {sle_conditions}""".format(sle_conditions=get_sle_conditions(filters)), filters, as_dict=1)
+	return frappe.db.sql("""select date,section_name, section_area, area, prune_type, bush_type from `tabDaily Green Leaf in details` where estate_name = %s and date= %s""",(filters.estate_name,filters.date),as_dict=1)
 
 
 
@@ -54,7 +51,7 @@ def get_columns():
 		columns.append({
 				"fieldname": "original_area",
 				"label": _("Area"),
-				"fieldtype": "Link",
+				"fieldtype": "Float",
 				"options": "daily_green_leaf_in_details",
 				"width": 70
 	    })
@@ -62,9 +59,9 @@ def get_columns():
 		columns.append({
 			"fieldname": "area",
 			"label": _("Area Plucked"),
-			"fieldtype": "Link",
+			"fieldtype": "Float",
 			"options": "daily_green_leaf_in_details",
-			"width":100
+			"width": 70
 
 			
 		})
@@ -74,7 +71,7 @@ def get_columns():
 			"fieldname": "prune_type",
 			"label": _("Prune Type"),
 			"fieldtype":"Link",
-			"options": "daily_green_leaf_in_details",
+			"options":"daily_green_leaf_in_details",
 			"width":133
 		})
 
@@ -83,7 +80,7 @@ def get_columns():
 			"fieldname": "bush_type",
 			"label": _("Bush Type"),
 			"fieldtype": "Link",
-			"options": "daily_green_leaf_in_details",
+			"options":"daily_green_leaf_in_details",
 			"width":135
 		})
 
