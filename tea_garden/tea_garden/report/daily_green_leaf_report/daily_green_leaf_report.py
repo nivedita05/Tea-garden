@@ -4,6 +4,10 @@ from frappe import _
 from frappe.model.document import Document
 from frappe import utils
 from frappe.utils import flt
+from datetime import datetime
+#import timedelta
+#import json
+
 def execute(filters=None):
 	columns = get_columns()
 	report_entries = get_report_entries(filters)
@@ -23,9 +27,9 @@ def execute(filters=None):
 		section_detail = get_section_details(sle.section_name,filters)
 		budget_details=get_budget(sle.section_name,filters)
 		pecent_of_crop=get_percent_of_year_croped(sle.section_name,filters)
+		date=get_starting_date(sle.section_name,filters)
 
-		
-		data.append([sle.section_name,section_detail[0][0],section_detail[0][1],todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop])
+		data.append([sle.section_name,section_detail[0][0],section_detail[0][1],todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop,date])
 			
 	return columns, data
 
@@ -83,6 +87,19 @@ def get_percent_of_year_croped(section_name,filters):
 
 
 
+def get_starting_date(section_name,filters):
+	todays_date=datetime.today().strftime("%Y-%m-%d")
+	day1=datetime.strptime(todays_date,'%Y-%m-%d')
+	
+	starting_date=frappe.db.sql("""select min(date) from `tabDaily Green Leaf in details` where section_name=%s and date BETWEEN %s AND %s""",(section_name,'2016-01-01',filters.date))	
+	day2=datetime.strptime(starting_date[0][0],'%Y-%m-%d')
+
+	diff=abs(day1.date()-day2.date()).days
+	r=get_round(section_name,filters)
+	r_per_days=diff/r[0][0]
+	return r_per_days
+	#date_diff=todays_date-starting_date
+	
 
 def get_sle_conditions(filters):
 	conditions = []
@@ -106,7 +123,7 @@ def get_columns():
 				"label": _("Area"),
 				"fieldtype": "Float",
 				"options": "daily_green_leaf_in_details",
-				"width": 70
+				"width": 75
 	    })
 
 		columns.append({
@@ -114,7 +131,7 @@ def get_columns():
 			"label": _("Area Plucked"),
 			"fieldtype": "Float",
 			"options": "daily_green_leaf_in_details",
-			"width": 120
+			"width": 75
 
 			
 		})
@@ -123,61 +140,67 @@ def get_columns():
 		columns.append({
 			"label": _("Area Plucked To Date"),
 			"fieldtype": "Float",
-			"width":135
+			"width":75
 		})
 
 		columns.append({
 			"label": _("Pluckers To Date"),
 			"fieldtype": "Int",
-			"width":135
+			"width":75
 		})
 
 		columns.append({
 			"label": _("Green leaf To Date"),
 			"fieldtype": "Float",
-			"width":135
+			"width":90
 		})
 
 		columns.append({
 			"label": _("Pluckers/hector"),
 			"fieldtype": "Int",
-			"width":135
+			"width":72
 		})
 
 		columns.append({
 			"label": _("Green Leaf/hector"),
 			"fieldtype": "Int",
-			"width":135
+			"width":71
 		})
 
 		columns.append({
 			"label": _("Plucking Avegare"),
 			"fieldtype": "round(Float,2)",
-			"width":135
+			"width":71
 		})
 
 		columns.append({
 			"label": _("Round"),
 			"fieldtype": "Int",
-			"width":135
+			"width":71
 		})
 
 		columns.append({
 			"label": _("Yield/Hector"),
 			"fieldtype": "round(Float,2)",
-			"width":135
+			"width":71
 		})
 
 		columns.append({
 			"label": _("Budget"),
 			"fieldtype": "Int",
-			"width":135
+			"width":71
 		})
 
 		columns.append({
 			"label": _("Percent Of Yr Crop"),
 			"fieldtype": "Float",
-			"width":135
+			"width":70
+		})
+
+		columns.append({
+			"label": _("R/Days"),
+			"fieldtype": "Int",
+			"width":70
 		})
 
 		
