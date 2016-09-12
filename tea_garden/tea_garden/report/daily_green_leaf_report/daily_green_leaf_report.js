@@ -8,7 +8,7 @@ frappe.query_reports["Daily Green Leaf Report"] = {
             "label": __("DATE"),
             "fieldtype": "Date",
             "options": "",
-            "default": frappe.defaults.get_user_default("date"),
+            "default": frappe.datetime.get_today(),
             "reqd":1
         },
 
@@ -18,7 +18,7 @@ frappe.query_reports["Daily Green Leaf Report"] = {
             "label": __("ESTATE NAME"),
             "fieldtype": "Link",
             "options": "Estate",
-            "default": frappe.defaults.get_user_default("estate_name"),
+            "default": frappe.defaults.get_user_default("Estate"),
             "reqd":1
          },
 
@@ -27,7 +27,7 @@ frappe.query_reports["Daily Green Leaf Report"] = {
             "label": __("Bush"),
             "fieldtype":"Data",
             "options":"",
-            "default": frappe.defaults.get_user_default("Mature"),
+            "default": "Mature",
             "reqd":1
          },
 
@@ -36,7 +36,7 @@ frappe.query_reports["Daily Green Leaf Report"] = {
             "label": __("Prune"),
             "fieldtype": "Link",
             "options": "Prune Type",
-            "default": frappe.defaults.get_user_default("prune_type"),
+            "default": "",
             "reqd":1
          },
 

@@ -25,11 +25,12 @@ def execute(filters=None):
 		todate_round=get_round(sle.section_name,filters)
 		todate_yeild_hector=get_todate_yield_per_hector(sle.section_name,filters)
 		section_detail = get_section_details(sle.section_name,filters)
+		section_detail1=get_section_details1(sle.section_name,filters)
 		budget_details=get_budget(sle.section_name,filters)
 		pecent_of_crop=get_percent_of_year_croped(sle.section_name,filters)
 		date=get_starting_date(sle.section_name,filters)
 
-		data.append([sle.section_name,section_detail[0][0],section_detail[0][1],todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop,date])
+		data.append([sle.section_name,section_detail,section_detail1,todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop,date])
 			
 	return columns, data
 
@@ -75,7 +76,12 @@ def get_todate_yield_per_hector(section_name,filters):
 
 
 def get_section_details(section_name,filters):
-	return frappe.db.sql("""select section_area,area from `tabDaily Green Leaf in details` where section_name = %s ORDER BY date DESC LIMIT 1""",(section_name)) 
+	return frappe.db.sql("""select section_area from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s  ORDER BY Date DESC""",(section_name,'2016-01-01',filters.date)) 
+
+
+def get_section_details1(section_name,filters):
+	return frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_name = %s and date=%s""",(section_name,filters.date)) 
+
 
 
 def get_budget(section_name,filters):
