@@ -14,8 +14,8 @@ class TestDailyGreenLeaf(unittest.TestCase):
 	
 	def test_estate_name(self):
 		dgl = frappe.get_doc('Daily Green Leaf', '_Test dgl code')
-		dgl = create_daily_green_leaf(do_not_submit=True)
-		dgl.submit()
+		#dgl = create_daily_green_leaf(do_not_submit=True)
+		#dgl.submit()
 		self.assertTrue('dgl_code' in dgl.as_dict())
 		self.assertEqual(dgl.estate_name, "_Test Estate_1")
 		#dgl = create_daily_green_leaf(section_name="_Test Section name", is_subcontracted="Yes")
@@ -39,7 +39,7 @@ def create_daily_green_leaf(**args):
 	dgl.dgl_code = args.dgl_code or "_Test dgl code"
 
 	dgl.append("leaf_detais", {
-		"section_name": args.section or args.section_name or "_Test Section name",
+		"section_name": args.section or args.section_name or "SG 6/8 A",
 		"area": args.area or 7,
 		"section_area": args.section_area or 10,
 		"leaf_count": args.leaf_count or 15000,
@@ -48,7 +48,7 @@ def create_daily_green_leaf(**args):
 		"division_name": args.division_name or "Krishna",
 		"prune_type": args.prune_type or "LP",
 		"bush_type": args.bush_type or "Mature",
-		"today_budget": self.fetch_prune_cycle() or 26.67
+		"today_budget": dgl.calculate_today_budget() or 26.67
 	})
 	if not args.do_not_save:
 		dgl.insert()

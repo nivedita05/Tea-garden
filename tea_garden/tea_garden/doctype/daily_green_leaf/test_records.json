@@ -4,9 +4,9 @@
   "estate_name": "_Test Estate_1",
   "dgl_code": "_Test dgl code",
   "doctype": "Daily Green Leaf",
-  "leaf_detais": [
+  "leaf_details": [
    {
-    "section_name": "_Test Section name",
+    "section_name": "SG 6/8 A",
     "area": 7,
     "section_area": 10,
     "leaf_count": 15000,
@@ -23,7 +23,7 @@
     "today_budget":26.67  
     },
    {
-    "section_name": "_Test Section name",
+    "section_name": "WG 13/16 B",
     "area": 7,
     "section_area": 10,
     "leaf_count": 15000,
