@@ -1,0 +1,14 @@
+[
+ {
+  "doctype": "Estate",
+  "garden_name": "_Test Estate_1",
+  "abbreviation": "_Test GHT",
+  "garden_description": "_Test estate desc"
+ },
+{
+  "doctype": "Estate",
+  "garden_name": "_Test Estate_2",
+  "abbreviation": "_Test GHL",
+  "garden_description": "_Test estate desc 2"
+ }
+]

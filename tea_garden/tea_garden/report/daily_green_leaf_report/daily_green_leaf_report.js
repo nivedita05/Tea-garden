@@ -25,8 +25,10 @@ frappe.query_reports["Daily Green Leaf Report"] = {
         {
             "fieldname":"bush_type",
             "label": __("Bush"),
-            "fieldtype":"Data",
-            "options":"",
+            "fieldtype":"Select",
+            "options": [
+                { "value": "Mature"},
+                { "value" : "Young"}],
             "default": "Mature",
             "reqd":1
          },

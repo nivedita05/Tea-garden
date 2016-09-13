@@ -16,9 +16,9 @@ class DailyGreenLeaf(Document):
 
 
 	def validate(self):
-		self.fetch_prune_cycle2()
-		self.fetch_prune_cycle1()
-		self.fetch_prune_cycle()
+		self.get_bush_name()
+		self.get_prune_name()
+		self.calculate_today_budget()
 		self.validate_section_name()
 		self.validtae_area()
 		self.validate_uniqueness()
@@ -27,18 +27,22 @@ class DailyGreenLeaf(Document):
 		
 		
 
+# check the area entered is less than the original area or not , otherwise give  an error message
 
 	def validtae_area(self):
 		for i in self.leaf_details:
 			if(i.section_area<i.area):
 				frappe.throw("the area entered is more than the original area  !!!!!!!")
 						
+# check the combination of date and garden is unique or not 
 
 	def validate_uniqueness(self):
 		name=frappe.db.sql("""select date from `tabDaily Green Leaf` 
 				where date=%s and estate_name=%s and docstatus=1""",(self.date,self.estate_name))
 		if name:
 			frappe.throw("Record already exist for the date!!!!")
+
+# if a record realated to a section for a particula garden on a particular date is already entered or not
 
 	def validate_section_name(self):
 		"""Set missing names and warn if duplicate"""
@@ -50,9 +54,9 @@ class DailyGreenLeaf(Document):
 
 			found.append(section.section_name)
 				
+# calculate the budget corresponding to a particular date of a particular month
 
-
-	def fetch_prune_cycle(self):
+	def calculate_today_budget(self):
 		
 		for i in self.leaf_details:
 			#if (frappe.utils.get_datetime(self.date).strftime('%Y')=="2016" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2017" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2018" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2019"):
@@ -109,21 +113,23 @@ class DailyGreenLeaf(Document):
 
 		return i.today_budget
 
+# get the prune name corresponding to the section
 
-	def fetch_prune_cycle1(self):
+	def get_prune_name(self):
 		
 		for i in self.leaf_details:
 			#if (frappe.utils.get_datetime(self.date).strftime('%Y')=="2016" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2017" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2018" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2019"):
 			prune_cycle=frappe.db.sql("""select  prune_type from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
 			i.prune_type=prune_cycle[0][0]
-		return i.prune_type
-			#frappe.throw(i.today_budget)
+		
 
-	def fetch_prune_cycle2(self):
+# get the bush name corresponding to the section
+
+	def get_bush_name(self):
 		
 		for i in self.leaf_details:
 			#if (frappe.utils.get_datetime(self.date).strftime('%Y')=="2016" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2017" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2018" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2019"):
 			prune_cycle=frappe.db.sql("""select bush_type from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
 			i.bush_type=prune_cycle[0][0]
-		return i.bush_type
+		
 				

@@ -1,0 +1,46 @@
+[
+ {
+  "date": "2016-09-05",
+  "estate_name": "_Test Estate_1",
+  "dgl_code": "_Test dgl code",
+  "doctype": "Daily Green Leaf",
+  "leaf_detais": [
+   {
+    "section_name": "_Test Section name",
+    "area": 7,
+    "section_area": 10,
+    "leaf_count": 15000,
+    "pluckers": 25,
+    "doctype": "Daily Green Leaf in details",
+    "ballometer": "NA",
+    "estate_name": "_Test Estate_1",
+    "division_name": "Krishna",
+    "prune_type": "LP",
+    "bush_type": "Mature",
+    "round_days": 10,
+    "projected_yield": 50,
+    "date": "2016-09-05",
+    "today_budget":26.67  
+    },
+   {
+    "section_name": "_Test Section name",
+    "area": 7,
+    "section_area": 10,
+    "leaf_count": 15000,
+    "pluckers": 25,
+    "doctype": "Daily Green Leaf in details",
+    "ballometer": "NA",
+    "estate_name": "_Test Estate_1",
+    "division_name": "Krishna",
+    "prune_type": "LP",
+    "bush_type": "Mature",
+    "round_days": 10,
+    "projected_yield": 50,
+    "date": "2016-09-05",
+    "today_budget":26.67
+    }    
+
+    ]
+  }
+
+]
