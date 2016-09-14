@@ -18,16 +18,10 @@ class TestDailyGreenLeaf(unittest.TestCase):
 		#dgl.submit()
 		self.assertTrue('dgl_code' in dgl.as_dict())
 		self.assertEqual(dgl.estate_name, "_Test Estate_1")
-		#dgl = create_daily_green_leaf(section_name="_Test Section name", is_subcontracted="Yes")
-		#self.assertEquals(len(dgl.get("leaf_details")), 2)
-        # Test if test supplier field record is 'Greece'
-        #self.assertEqual(supplier.country, "Greece")
 
-        # Test update Supplier instance country value
-        #supplier = frappe.get_doc('Supplier', '_Test Supplier')
-        #supplier.country = 'Greece'
-        #supplier.save()
-		#self.assertEqual(supplier.country, "Greece")
+	def validate_section_area(self):		
+		dgl = create_daily_green_leaf(section_name="SG 6/8 A",area=15,do_not_save=True)
+		self.assertRaises(ValidationError, dgl.insert)
 
 def create_daily_green_leaf(**args):
 	dgl = frappe.new_doc("Daily Green Leaf")
@@ -38,9 +32,9 @@ def create_daily_green_leaf(**args):
 	dgl.estate_name = args.estate_name or "_Test Estate_1"
 	dgl.dgl_code = args.dgl_code or "_Test dgl code"
 
-	dgl.append("leaf_detais", {
+	dgl.append("leaf_details", {
 		"section_name": args.section or args.section_name or "SG 6/8 A",
-		"area": args.area or 7,
+		"area": args.area,
 		"section_area": args.section_area or 10,
 		"leaf_count": args.leaf_count or 15000,
 		"pluckers": args.pluckers or 25,

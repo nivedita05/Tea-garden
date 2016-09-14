@@ -26,11 +26,12 @@ def execute(filters=None):
 		todate_yeild_hector=get_todate_yield_per_hector(sle.section_name,filters)
 		section_detail = get_section_details(sle.section_name,filters)
 		section_detail1=get_section_details1(sle.section_name,filters)
+		
 		budget_details=get_budget(sle.section_name,filters)
 		pecent_of_crop=get_percent_of_year_croped(sle.section_name,filters)
 		date=get_starting_date(sle.section_name,filters)
 
-		data.append([sle.section_name,section_detail,section_detail1,todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop,date])
+		data.append([sle.division_name,sle.section_name,section_detail,section_detail1,todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop,date])
 			
 	return columns, data
 
@@ -42,7 +43,9 @@ def execute(filters=None):
 
 
 def get_report_entries(filters):
-	return frappe.db.sql("""select distinct section_name from `tabDaily Green Leaf in details` where estate_name = %s and prune_type=%s and bush_type=%s and division_name=%s and date BETWEEN %s AND %s ORDER BY date DESC""",(filters.estate_name,filters.prune_type,filters.bush_type,filters.division_name,'2016-01-01', filters.date),as_dict=1)
+	return frappe.db.sql("""select distinct section_name,division_name from `tabDaily Green Leaf in details` where estate_name = %s and prune_type=%s and bush_type=%s and date BETWEEN %s AND %s ORDER BY date DESC""",(filters.estate_name,filters.prune_type,filters.bush_type,'2016-01-01', filters.date),as_dict=1)
+
+
 
 def get_todate_area_pluck(section_name,filters):
 	return frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_name, '2016-01-01',filters.date))
@@ -116,20 +119,27 @@ def get_sle_conditions(filters):
 def get_columns():
 		
 		columns = [{
-			"fieldname": "section_name",
-			"label": _("Section"),
-			"fieldtype": "Link",
-			"options": "daily_green_leaf_in_details",
-			"width": 120
-
+			"fieldname": "division_name",
+				"label": _("Division"),
+				"fieldtype": "Link",
+				"options": "daily_green_leaf_in_details",
+				"width": 80
 		}]
+
+		columns.append({
+				"fieldname": "section_name",
+				"label": _("Section"),
+				"fieldtype": "Link",
+				"options": "daily_green_leaf_in_details",
+				"width": 90
+	    })
 		
 		columns.append({
 				"fieldname": "original_area",
 				"label": _("Area"),
 				"fieldtype": "Float",
 				"options": "daily_green_leaf_in_details",
-				"width": 75
+				"width": 70
 	    })
 
 		columns.append({
@@ -137,7 +147,7 @@ def get_columns():
 			"label": _("Area Plucked"),
 			"fieldtype": "Float",
 			"options": "daily_green_leaf_in_details",
-			"width": 75
+			"width": 70
 
 			
 		})
@@ -146,13 +156,13 @@ def get_columns():
 		columns.append({
 			"label": _("Area Plucked To Date"),
 			"fieldtype": "Float",
-			"width":75
+			"width":70
 		})
 
 		columns.append({
 			"label": _("Pluckers To Date"),
 			"fieldtype": "Int",
-			"width":75
+			"width":7
 		})
 
 		columns.append({

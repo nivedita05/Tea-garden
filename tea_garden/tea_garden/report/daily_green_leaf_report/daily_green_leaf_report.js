@@ -42,14 +42,7 @@ frappe.query_reports["Daily Green Leaf Report"] = {
             "reqd":1
          },
 
-        {
-            "fieldname":"division_name",
-            "label": __("Division"),
-            "fieldtype": "Link",
-            "options": "Division",
-            "default": frappe.defaults.get_user_default("division_name"),
-            "reqd":1
-         }
+        
 
 	]
 
