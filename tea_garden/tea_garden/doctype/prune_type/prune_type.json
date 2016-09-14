@@ -1,6 +1,6 @@
 {
  "allow_copy": 0, 
- "allow_import": 0, 
+ "allow_import": 1, 
  "allow_rename": 0, 
  "autoname": "field:prune_name", 
  "beta": 0, 
@@ -47,7 +47,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2016-08-30 13:02:00.722027", 
+ "modified": "2016-09-14 15:50:54.336343", 
  "modified_by": "Administrator", 
  "module": "Tea Garden", 
  "name": "Prune Type", 

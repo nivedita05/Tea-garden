@@ -1,6 +1,6 @@
 {
  "allow_copy": 0, 
- "allow_import": 0, 
+ "allow_import": 1, 
  "allow_rename": 0, 
  "autoname": "field:budget_code", 
  "beta": 0, 
@@ -524,7 +524,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2016-09-07 12:38:42.470718", 
+ "modified": "2016-09-14 17:08:11.117499", 
  "modified_by": "Administrator", 
  "module": "Tea Garden", 
  "name": "Prune Budget", 

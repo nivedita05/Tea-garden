@@ -16,14 +16,14 @@ class PruneBudget(Document):
 
 # chack that after suming the percentage of 12 months it returns 100 or not
 	def validate_100(self):
-		sum=self.january+self.february+self.march+self.april+self.may+self.june+self.july+self.august+self.september+self.october+self.november+self.december
-		if sum!=100:
-			frappe.throw("wrong input, sum must be equal to 100")
-
+		sumv=self.january+self.february+self.march+self.april+self.may+self.june+self.july+self.august+self.september+self.october+self.november+self.december
+		if (round(float(sumv),2)!=100):
+			frappe.throw("The sum of the given percentages is not equal to zero")
+				
 #the combination of garden,prune and bush must be unique when preparing a budget
 	def uniqueness_in_three(self):
 		name=frappe.db.sql("""select * from `tabPrune Budget` as pb
-				where pb.prune_type=%s and pb.estate_name=%s and pb.bush_type=%s""",(self.prune_type,self.estate_name,self.bush_type))
+				where pb.prune_type=%s and pb.estate_name=%s and pb.bush_type=%s  and docstatus=1""",(self.prune_type,self.estate_name,self.bush_type))
 		if name and self.docstatus==0:
 			frappe.throw("Record already exist for the date!!!!")
 
