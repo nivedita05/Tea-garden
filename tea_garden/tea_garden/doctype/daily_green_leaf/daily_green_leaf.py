@@ -111,6 +111,7 @@ class DailyGreenLeaf(Document):
 				prune_cycle=frappe.db.sql("""select december from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
 				i.today_budget=round((float(prune_cycle[0][0])/31),2)
 
+			
 		
 
 # get the prune name corresponding to the section
@@ -121,7 +122,7 @@ class DailyGreenLeaf(Document):
 			#if (frappe.utils.get_datetime(self.date).strftime('%Y')=="2016" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2017" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2018" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2019"):
 			prune_cycle=frappe.db.sql("""select  prune_type from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
 			i.prune_type=prune_cycle[0][0]
-		
+			
 
 # get the bush name corresponding to the section
 
@@ -131,5 +132,4 @@ class DailyGreenLeaf(Document):
 			#if (frappe.utils.get_datetime(self.date).strftime('%Y')=="2016" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2017" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2018" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2019"):
 			prune_cycle=frappe.db.sql("""select bush_type from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
 			i.bush_type=prune_cycle[0][0]
-		
-				
+							
