@@ -19,8 +19,8 @@ class DailyGreenLeaf(Document):
 		self.get_bush_name()
 		self.get_prune_name()
 		self.calculate_today_budget()
-		self.validate_section_name()
-		self.validtae_area()
+		self.validate_section_id()
+		#self.validtae_area()
 		self.validate_uniqueness()
 
 	
@@ -44,15 +44,15 @@ class DailyGreenLeaf(Document):
 
 # if a record realated to a section for a particula garden on a particular date is already entered or not
 
-	def validate_section_name(self):
+	def validate_section_id(self):
 		"""Set missing names and warn if duplicate"""
 		found = []
 		for section in self.leaf_details:
 
-			if section.section_name in found:
-				frappe.throw(_("Section {0} entered twice").format(section.section_name))
+			if section.section_id in found:
+				frappe.throw(_("Section {0} entered twice").format(section.section_id))
 
-			found.append(section.section_name)
+			found.append(section.section_id)
 				
 # calculate the budget corresponding to a particular date of a particular month
 
@@ -62,53 +62,53 @@ class DailyGreenLeaf(Document):
 			#if (frappe.utils.get_datetime(self.date).strftime('%Y')=="2016" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2017" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2018" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2019"):
 				
 			if(frappe.utils.get_datetime(self.date).strftime('%m')=="01"):
-				prune_cycle=frappe.db.sql("""select january from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select january from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/31),2)
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="02"):
-				prune_cycle=frappe.db.sql("""select february from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select february from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/28),2)
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="03"):
-				prune_cycle=frappe.db.sql("""select march from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select march from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/31),2)
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="04"):
-				prune_cycle=frappe.db.sql("""select april from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select april from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/30),2)
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="05"):
-				prune_cycle=frappe.db.sql("""select may from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select may from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/31),2)
 
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="06"):
-				prune_cycle=frappe.db.sql("""select june from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select june from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/30),2)
 
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="07"):
-				prune_cycle=frappe.db.sql("""select july from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select july from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/31),2)
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="08"):
-				prune_cycle=frappe.db.sql("""select august from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select august from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/31),2)
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="09"):
-				prune_cycle=frappe.db.sql("""select september from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select september from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/30),2)
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="10"):
-				prune_cycle=frappe.db.sql("""select october from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select october from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/31),2)
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="11"):
-				prune_cycle=frappe.db.sql("""select november from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select november from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/30),2)
 
 			elif(frappe.utils.get_datetime(self.date).strftime('%m')=="12"):
-				prune_cycle=frappe.db.sql("""select december from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+				prune_cycle=frappe.db.sql("""select december from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 				i.today_budget=round((float(prune_cycle[0][0])/31),2)
 
 			
@@ -120,7 +120,7 @@ class DailyGreenLeaf(Document):
 		
 		for i in self.leaf_details:
 			#if (frappe.utils.get_datetime(self.date).strftime('%Y')=="2016" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2017" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2018" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2019"):
-			prune_cycle=frappe.db.sql("""select  prune_type from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+			prune_cycle=frappe.db.sql("""select  prune_type from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 			i.prune_type=prune_cycle[0][0]
 			
 
@@ -130,6 +130,6 @@ class DailyGreenLeaf(Document):
 		
 		for i in self.leaf_details:
 			#if (frappe.utils.get_datetime(self.date).strftime('%Y')=="2016" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2017" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2018" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2019"):
-			prune_cycle=frappe.db.sql("""select bush_type from `tabPruning Cycle` where year=%s and section_name=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_name))
+			prune_cycle=frappe.db.sql("""select bush_type from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 			i.bush_type=prune_cycle[0][0]
 							

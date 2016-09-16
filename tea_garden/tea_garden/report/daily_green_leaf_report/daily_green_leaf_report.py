@@ -16,22 +16,22 @@ def execute(filters=None):
 	
 
 	for sle in report_entries:
-		todate_area    = get_todate_area_pluck(sle.section_name,filters)
-		todate_pluckers=get_todate_pluckers(sle.section_name,filters)
-		todate_leaf_count=get_todate_green_leaf(sle.section_name,filters)
-		todate_pluckers_hector=get_todate_pluckers_per_hector(sle.section_name,filters)
-		todate_green_leaf_hector=get_todate_green_leaf_per_hector(sle.section_name,filters)
-		todate_plucking_avg=get_plucking_average(sle.section_name,filters)
-		todate_round=get_round(sle.section_name,filters)
-		todate_yeild_hector=get_todate_yield_per_hector(sle.section_name,filters)
-		section_detail = get_section_details(sle.section_name,filters)
-		section_detail1=get_section_details1(sle.section_name,filters)
+		todate_area    = get_todate_area_pluck(sle.section_id,filters)
+		todate_pluckers=get_todate_pluckers(sle.section_id,filters)
+		todate_leaf_count=get_todate_green_leaf(sle.section_id,filters)
+		todate_pluckers_hector=get_todate_pluckers_per_hector(sle.section_id,filters)
+		todate_green_leaf_hector=get_todate_green_leaf_per_hector(sle.section_id,filters)
+		todate_plucking_avg=get_plucking_average(sle.section_id,filters)
+		todate_round=get_round(sle.section_id,filters)
+		todate_yeild_hector=get_todate_yield_per_hector(sle.section_id,filters)
+		section_detail = get_section_details(sle.section_id,filters)
+		section_detail1=get_section_details1(sle.section_id,filters)
 		
-		budget_details=get_budget(sle.section_name,filters)
-		pecent_of_crop=get_percent_of_year_croped(sle.section_name,filters)
-		date=get_starting_date(sle.section_name,filters)
+		budget_details=get_budget(sle.section_id,filters)
+		pecent_of_crop=get_percent_of_year_croped(sle.section_id,filters)
+		date=get_starting_date(sle.section_id,filters)
 
-		data.append([sle.division_name,sle.section_name,section_detail,section_detail1,todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop,date])
+		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,section_detail1,todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop,date])
 			
 	return columns, data
 
@@ -43,69 +43,72 @@ def execute(filters=None):
 
 
 def get_report_entries(filters):
-	return frappe.db.sql("""select distinct section_name,division_name from `tabDaily Green Leaf in details` where estate_name = %s and prune_type=%s and bush_type=%s and date BETWEEN %s AND %s ORDER BY date DESC""",(filters.estate_name,filters.prune_type,filters.bush_type,'2016-01-01', filters.date),as_dict=1)
+	return frappe.db.sql("""select distinct section_id,section_name,division_name from `tabDaily Green Leaf in details` where estate_name = %s and prune_type=%s and bush_type=%s and date BETWEEN %s AND %s ORDER BY date DESC""",(filters.estate_name,filters.prune_type,filters.bush_type,'2016-01-01', filters.date),as_dict=1)
 
 
 
-def get_todate_area_pluck(section_name,filters):
-	return frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_name, '2016-01-01',filters.date))
+def get_todate_area_pluck(section_id,filters):
+	return frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
 
-def get_todate_pluckers(section_name,filters):
-	return frappe.db.sql("""select sum(pluckers) from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_name, '2016-01-01',filters.date))
+def get_todate_pluckers(section_id,filters):
+	return frappe.db.sql("""select sum(pluckers) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
 
-def get_todate_green_leaf(section_name,filters):
-	return frappe.db.sql("""select sum(leaf_count) from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_name, '2016-01-01',filters.date))
+def get_todate_green_leaf(section_id,filters):
+	return frappe.db.sql("""select sum(leaf_count) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
 
-def get_todate_pluckers_per_hector(section_name,filters):
-	return frappe.db.sql("""select round(sum(pluckers)/sum(area),2) from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_name, '2016-01-01',filters.date))
+def get_todate_pluckers_per_hector(section_id,filters):
+	return frappe.db.sql("""select round(sum(pluckers)/sum(area),2) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
-def get_todate_green_leaf_per_hector(section_name,filters):
-	return frappe.db.sql("""select round(sum(leaf_count)/sum(area),2) from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_name, '2016-01-01',filters.date))
-
-
-def get_plucking_average(section_name,filters):
-	return frappe.db.sql("""select round(sum(leaf_count)/sum(pluckers),2) from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_name, '2016-01-01',filters.date))
-
-def get_round(section_name,filters):
-	return frappe.db.sql("""select round(sum(area)/section_area,2) from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_name, '2016-01-01',filters.date))
+def get_todate_green_leaf_per_hector(section_id,filters):
+	return frappe.db.sql("""select round(sum(leaf_count)/sum(area),2) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
 
+def get_plucking_average(section_id,filters):
+	return frappe.db.sql("""select round(sum(leaf_count)/sum(pluckers),2) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
-def get_todate_yield_per_hector(section_name,filters):
-	return frappe.db.sql("""select round((sum(leaf_count)*0.225)/section_area,2) from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_name, '2016-01-01',filters.date))
-
-
-def get_section_details(section_name,filters):
-	return frappe.db.sql("""select section_area from `tabDaily Green Leaf in details` where section_name = %s and date BETWEEN %s AND %s  ORDER BY Date DESC""",(section_name,'2016-01-01',filters.date)) 
-
-
-def get_section_details1(section_name,filters):
-	return frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_name = %s and date=%s""",(section_name,filters.date)) 
+def get_round(section_id,filters):
+	return frappe.db.sql("""select round(sum(area)/section_area,2) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
 
 
-def get_budget(section_name,filters):
-	return frappe.db.sql("""select projected_yield*0.225 from `tabPruning Cycle` where section_name = %s """,(section_name)) 
+def get_todate_yield_per_hector(section_id,filters):
+	return frappe.db.sql("""select round((sum(leaf_count)*0.225)/section_area,2) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
 
-def get_percent_of_year_croped(section_name,filters):
-	return frappe.db.sql("""select round((sum(t.leaf_count)/sum(t.pluckers))/(p.projected_yield*0.225),2) from `tabDaily Green Leaf in details` t INNER JOIN `tabPruning Cycle` p  ON t.section_name=p.section_name where t.section_name = %s""",(section_name)) 
+def get_section_details(section_id,filters):
+	return frappe.db.sql("""select min(section_area) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,'2016-01-01s',filters.date)) 
+
+
+def get_section_details1(section_id,filters):
+	return frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id = %s and date=%s""",(section_id,filters.date)) 
 
 
 
-def get_starting_date(section_name,filters):
+def get_budget(section_id,filters):
+	return frappe.db.sql("""select projected_yield from `tabPruning Cycle` where section_id = %s """,(section_id)) 
+
+
+def get_percent_of_year_croped(section_id,filters):
+	return frappe.db.sql("""select round((sum(t.leaf_count)/sum(t.pluckers))/(p.projected_yield*0.225),2) from `tabDaily Green Leaf in details` t INNER JOIN `tabPruning Cycle` p  ON t.section_id=p.section_id where t.section_id = %s""",(section_id)) 
+
+
+
+def get_starting_date(section_id,filters):
 	todays_date=datetime.today().strftime("%Y-%m-%d")
 	day1=datetime.strptime(todays_date,'%Y-%m-%d')
 	
-	starting_date=frappe.db.sql("""select min(date) from `tabDaily Green Leaf in details` where section_name=%s and date BETWEEN %s AND %s""",(section_name,'2016-01-01',filters.date))	
+	starting_date=frappe.db.sql("""select min(date) from `tabDaily Green Leaf in details` where section_id=%s and date BETWEEN %s AND %s""",(section_id,'2016-01-01',filters.date))	
 	day2=datetime.strptime(starting_date[0][0],'%Y-%m-%d')
 
 	diff=abs(day1.date()-day2.date()).days
-	r=get_round(section_name,filters)
-	r_per_days=diff/r[0][0]
+	r=get_round(section_id,filters)
+	if r[0][0]<=0:
+		r_per_days = 0
+	else:
+		r_per_days=diff/round((r[0][0]),2)
 	return r_per_days
 	#date_diff=todays_date-starting_date
 	
@@ -122,15 +125,23 @@ def get_columns():
 			"fieldname": "division_name",
 				"label": _("Division"),
 				"fieldtype": "Link",
-				"options": "daily_green_leaf_in_details",
+				"options": "Division",
 				"width": 80
 		}]
+
+		columns.append({
+				"fieldname": "section_id",
+				"label": _("Section"),
+				"fieldtype": "Link",
+				"options": "Section",
+				"width": 90
+	    })
 
 		columns.append({
 				"fieldname": "section_name",
 				"label": _("Section"),
 				"fieldtype": "Link",
-				"options": "daily_green_leaf_in_details",
+				"options": "Section",
 				"width": 90
 	    })
 		

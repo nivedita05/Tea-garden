@@ -10,7 +10,7 @@
 // the naming series fro the pruning cycle
 frappe.ui.form.on("Pruning Cycle", "validate", function(frm) {
     frm.pruning_code="";
-    name=frm.doc.year+"-"+frm.doc.section_name;
+    name=frm.doc.year+"-"+frm.doc.section_id;
     frm.set_value("pruning_code",name);
 });
    
