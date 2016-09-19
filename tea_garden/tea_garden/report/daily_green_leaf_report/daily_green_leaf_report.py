@@ -70,6 +70,7 @@ def get_plucking_average(section_id,filters):
 	return frappe.db.sql("""select round(sum(leaf_count)/sum(pluckers),2) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
 def get_round(section_id,filters):
+
 	return frappe.db.sql("""select round(sum(area)/section_area,2) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
 
 
@@ -79,7 +80,7 @@ def get_todate_yield_per_hector(section_id,filters):
 
 
 def get_section_details(section_id,filters):
-	return frappe.db.sql("""select min(section_area) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,'2016-01-01s',filters.date)) 
+	return frappe.db.sql("""select min(section_area) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s and %s""",(section_id,'2016-01-01',filters.date)) 
 
 
 def get_section_details1(section_id,filters):
@@ -92,9 +93,13 @@ def get_budget(section_id,filters):
 
 
 def get_percent_of_year_croped(section_id,filters):
-	return frappe.db.sql("""select round((sum(t.leaf_count)/sum(t.pluckers))/(p.projected_yield*0.225),2) from `tabDaily Green Leaf in details` t INNER JOIN `tabPruning Cycle` p  ON t.section_id=p.section_id where t.section_id = %s""",(section_id)) 
-
-
+	todate_leaf = get_todate_green_leaf(section_id,filters)
+	area = get_section_details(section_id,filters)
+	yld = get_budget(section_id,filters)
+	yield_hact = round((((todate_leaf[0][0]/area[0][0])*0.225)/yld[0][0])*100,2)
+	return yield_hact
+	#return frappe.db.sql("""select ((sum(t.leaf_count)/min(t.section_area)*0.225)/min(p.projected_yield))*100 from `tabDaily Green Leaf in details` t INNER JOIN `tabPruning Cycle` p  ON t.section_id=p.section_id where t.section_id = %s""",(section_id)) 
+	
 
 def get_starting_date(section_id,filters):
 	todays_date=datetime.today().strftime("%Y-%m-%d")
@@ -219,7 +224,7 @@ def get_columns():
 		})
 
 		columns.append({
-			"label": _("Percent Of Yr Crop"),
+			"label": _(" % Of Yr Crop"),
 			"fieldtype": "round(Float,2)",
 			"width":70
 		})

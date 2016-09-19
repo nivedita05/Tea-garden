@@ -20,7 +20,7 @@ class DailyGreenLeaf(Document):
 		self.get_prune_name()
 		self.calculate_today_budget()
 		self.validate_section_id()
-		#self.validtae_area()
+		self.validtae_area()
 		self.validate_uniqueness()
 
 	
