@@ -32,7 +32,7 @@ def execute(filters=None):
 		date=get_starting_date(sle.section_id,filters)
 
 		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,section_detail1,todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop,date])
-			
+		
 	return columns, data
 
 
@@ -92,11 +92,16 @@ def get_budget(section_id,filters):
 	return frappe.db.sql("""select projected_yield from `tabPruning Cycle` where section_id = %s """,(section_id)) 
 
 
+
+
 def get_percent_of_year_croped(section_id,filters):
 	todate_leaf = get_todate_green_leaf(section_id,filters)
 	area = get_section_details(section_id,filters)
 	yld = get_budget(section_id,filters)
-	yield_hact = round((((todate_leaf[0][0]/area[0][0])*0.225)/yld[0][0])*100,2)
+	if yld[0][0]!=0:
+		yield_hact = round((((todate_leaf[0][0]/area[0][0])*0.225)/yld[0][0])*100,2)
+	else:
+		yield_hact = 0
 	return yield_hact
 	#return frappe.db.sql("""select ((sum(t.leaf_count)/min(t.section_area)*0.225)/min(p.projected_yield))*100 from `tabDaily Green Leaf in details` t INNER JOIN `tabPruning Cycle` p  ON t.section_id=p.section_id where t.section_id = %s""",(section_id)) 
 	
@@ -116,7 +121,8 @@ def get_starting_date(section_id,filters):
 		r_per_days=diff/round((r[0][0]),2)
 	return r_per_days
 	#date_diff=todays_date-starting_date
-	
+
+
 
 def get_sle_conditions(filters):
 	conditions = []
@@ -132,11 +138,12 @@ def get_columns():
 				"fieldtype": "Link",
 				"options": "Division",
 				"width": 80
+
 		}]
 
 		columns.append({
 				"fieldname": "section_id",
-				"label": _("Section"),
+				"label": _("Section Id"),
 				"fieldtype": "Link",
 				"options": "Section",
 				"width": 90
@@ -144,7 +151,7 @@ def get_columns():
 
 		columns.append({
 				"fieldname": "section_name",
-				"label": _("Section"),
+				"label": _("Section Name"),
 				"fieldtype": "Link",
 				"options": "Section",
 				"width": 90
