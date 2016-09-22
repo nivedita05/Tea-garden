@@ -29,9 +29,9 @@ def execute(filters=None):
 		from_date=get_from_date(sle.section_id,filters)
 		act=get_actual_to_date_green_leaf(sle.section_id,filters)
 		bud=get_to_date_budget(sle.section_id,filters)
-		perc=get_plus_minus_budget(sle.section_id,filters)
+		#perc=get_plus_minus_budget(sle.section_id,filters)
 		done_or_not_done=find_round(sle.section_id,filters)
-		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,todate_round,from_date,to_date,act,bud,perc,done_or_not_done])
+		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,todate_round,from_date,to_date,act,bud,done_or_not_done])
 		
 	return columns, data
 
@@ -81,37 +81,41 @@ def get_from_date(section_id,filters):
 		yesterday=datetime.strptime(date1[0][0],'%Y-%m-%d')-timedelta(days=1)
 		date2=yesterday.date()
 		area_plucked_prev=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date2))
-		for j in range(0,len(area_plucked_prev)):
-			for k in range(0,len(area_plucked)):
-				temp=area_plucked_prev[0][0]+area_plucked[0][0]
-				if temp==actual_area[0][0]:
-					frm=date2
-				else:
-					date3=date2-timedelta(days=1)
-					area_plucked_prev=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date3))
-					for j in range(0,len(area_plucked_prev)):
-						total=temp+area_plucked_prev[0][j]
-						if total==actual_area[0][0]:
-							frm=date3
-
+		if area_plucked_prev:
+			for i in range(0,len(area_plucked)):
+				for j in range(0,len(area_plucked_prev)):
+					total=round((area_plucked_prev[0][j]+area_plucked[0][i]),2)
+					if total-actual_area[0][0]==0:
+						frm=date2
+					else:
+						date3=date2-timedelta(days=1)
+						frm=date3
+						
+					
 	return frm
 
 
 			
 def get_actual_to_date_green_leaf(section_id,filters):
+
+	date2=get_from_date(section_id,filters)
 	date1=get_to_date(section_id,filters)
-	return frappe.db.sql("""select round(leaf_count/area,0) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,date1,filters.date))
+	day=find_round(section_id,filters)
+	if day=="complete":
+		
+		leaf_c=frappe.db.sql("""select round(sum(leaf_count),0) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,date2,filters.date))
+		a=frappe.db.sql("""select section_area from `tabDaily Green Leaf in details` where section_id = %s """,(section_id))
+		act=round(leaf_c[0][0]/a[0][0],0)
+	else:
+		leaf_c=frappe.db.sql("""select round(sum(leaf_count),0) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,date2,date1))
+		a=frappe.db.sql("""select section_area from `tabDaily Green Leaf in details` where section_id = %s """,(section_id))
+		act=round(leaf_c[0][0]/a[0][0],0)
+	return act
 
 def get_to_date_budget(section_id,filters):
 	date1=get_to_date(section_id,filters)
 	return frappe.db.sql("""select round(((t.round_days*p.august)/(0.225*31)),0) from `tabDaily Green Leaf in details` t INNER JOIN `tabPruning Cycle` p  ON t.section_id=p.section_id where t.section_id = %s and t.date=%s""",(section_id,date1)) 
 	
-def get_plus_minus_budget(section_id,filters):
-	bud=get_to_date_budget(section_id,filters)
-	act=get_actual_to_date_green_leaf(section_id,filters)
-	percent=round((round(act[0][0],0)-round(bud[0][0],0))*100/round((bud[0][0]),0),2)
-	return percent
-
 
 
 
