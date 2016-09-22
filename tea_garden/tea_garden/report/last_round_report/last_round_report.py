@@ -8,6 +8,7 @@ from frappe.model.document import Document
 from frappe import utils
 from frappe.utils import flt
 from datetime import datetime,timedelta
+import operator
 #import timedelta
 #import json
 
@@ -59,58 +60,46 @@ def find_round(section_id,filters):
 		return "incomplete"
 
 
-
-
 def get_to_date(section_id,filters):
-	date6=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,'2016-01-01',filters.date))
+	date1=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,'2016-01-01',filters.date))
 	single_day=find_round(section_id,filters)
 	if single_day=="complete":
-		date7=date6
+		to=date1
 	else:
-		date7=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id = %s and date<%s""",(section_id,date6))
-	return date7
+		to=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id = %s and date<%s""",(section_id,date1))
+	return to	
 
 
 def get_from_date(section_id,filters):
-	date1=get_to_date(section_id,filters) # IT WILL GET ALL THE TO DATE VALUE
-	single_day=find_round(section_id,filters) # IT WILL FETCH IF THE ROUND IS ENDED ON THE LAST DAY PLUCKED OR NOT
-	plucked_area=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date1)) # IT WILL FETCH THE PLUCKED AREA FOR EACH TO DATE
-	original_area=get_section_details(section_id,filters) # IT WILL FETCH THE ORIGINAL AREA
-	if single_day=="complete":# IF THE ROUNDS END ON THE LAST DAY OF FETCH 
-		# IF IT COMPLETED IN A SINGLE DAY
-		if round(float(plucked_area[0][0]),3)==round(float(original_area[0][0]),3):
-			date4=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,'2016-01-01',filters.date))
-		# IF IT TAK EMORE THAN ONE DAY TO COMPLETE THE ROUND
-		elif round(float(plucked_area[0][0]),3)<round(float(original_area[0][0]),3):
-			date4=0
-			yesterday=datetime.strptime(date1[0][0],'%Y-%m-%d')-timedelta(days=1)
-			date3=yesterday.date()
-			plucked_area1=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date3))
-			total_plucked=plucked_area[0][0]+plucked_area1[0][0]
-			if total_plucked==original_area[0][0]:
-				date4=date3
-	else:
-		date1=get_to_date(section_id,filters) # IT WILL GET ALL THE TO DATE VALUE
-		plucked_area=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date1))
-		todate_round=get_round(section_id,filters)
-		date4=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id=%s and date<%s""",(section_id,date1))
-		plucked_area1=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date4)) 
-		total_plucked=plucked_area[0][0]+plucked_area1[0][0]
-		if total_plucked<original_area[0][0]:
-			yesterday=datetime.strptime(date4[0][0],'%Y-%m-%d')-timedelta(days=1)
-			date3=yesterday.date()
-			plucked_area1=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date3))
-			total_plucked+=plucked_area1[0][0]
-			#return total_plucked
-			if total_plucked==original_area[0][0]:
-				date4=date3
+	date1=get_to_date(section_id,filters) 
+	area_plucked=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date1))
+	actual_area=get_section_details(section_id,filters)
+	if area_plucked==actual_area:
+		frm=date1
+	elif area_plucked<actual_area:
+		frm=0
+		yesterday=datetime.strptime(date1[0][0],'%Y-%m-%d')-timedelta(days=1)
+		date2=yesterday.date()
+		area_plucked_prev=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date2))
+		for j in range(0,len(area_plucked_prev)):
+			for k in range(0,len(area_plucked)):
+				temp=area_plucked_prev[0][0]+area_plucked[0][0]
+				if temp==actual_area[0][0]:
+					frm=date2
+				else:
+					date3=date2-timedelta(days=1)
+					area_plucked_prev=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,date3))
+					for j in range(0,len(area_plucked_prev)):
+						total=temp+area_plucked_prev[0][j]
+						if total==actual_area[0][0]:
+							frm=date3
 
-	return date4
+	return frm
+
 
 			
 def get_actual_to_date_green_leaf(section_id,filters):
 	date1=get_to_date(section_id,filters)
-	#date2=get_from_date(section_id,filters)
 	return frappe.db.sql("""select round(leaf_count/area,0) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,date1,filters.date))
 
 def get_to_date_budget(section_id,filters):
@@ -183,14 +172,14 @@ def get_columns():
 		columns.append({
 			"label": _("From"),
 			"fieldtype": "Data",
-			"width":71
+			"width":100
 		})
 
 		
 		columns.append({
 			"label": _("To"),
 			"fieldtype": "Data",
-			"width":71
+			"width":100
 		})
 
 		columns.append({
