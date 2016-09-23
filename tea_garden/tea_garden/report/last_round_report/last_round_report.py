@@ -29,9 +29,10 @@ def execute(filters=None):
 		from_date=get_from_date(sle.section_id,filters)
 		act=get_actual_to_date_green_leaf(sle.section_id,filters)
 		bud=get_to_date_budget(sle.section_id,filters)
-		#perc=get_plus_minus_budget(sle.section_id,filters)
+		perc=get_plus_minus_percentage(sle.section_id,filters)
 		done_or_not_done=find_round(sle.section_id,filters)
-		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,todate_round,from_date,to_date,act,bud,done_or_not_done])
+		act1=get_actual_gree_leaf(sle.section_id,filters)
+		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,todate_round,from_date,to_date,act,bud,perc,done_or_not_done,act1])
 		
 	return columns, data
 
@@ -117,10 +118,28 @@ def get_to_date_budget(section_id,filters):
 	return frappe.db.sql("""select round(((t.round_days*p.august)/(0.225*31)),0) from `tabDaily Green Leaf in details` t INNER JOIN `tabPruning Cycle` p  ON t.section_id=p.section_id where t.section_id = %s and t.date=%s""",(section_id,date1)) 
 	
 
-
+def get_plus_minus_percentage(section_id,filters):
+	act=get_actual_to_date_green_leaf(section_id,filters)
+	bud=get_to_date_budget(section_id,filters)
+	perc=round((act-bud[0][0])*100/bud[0][0],2)
+	return perc
 
 	
-	
+def get_actual_gree_leaf(section_id,filters):
+	date2=get_from_date(section_id,filters)
+	date1=get_to_date(section_id,filters)
+	day=find_round(section_id,filters)
+	if day=="complete":
+		
+		leaf_c=frappe.db.sql("""select round(sum(leaf_count),0) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,'2016-01-01',filters.date))
+		a=frappe.db.sql("""select section_area from `tabDaily Green Leaf in details` where section_id = %s """,(section_id))
+		act=round(leaf_c[0][0]/a[0][0],0)
+	else:
+		leaf_c=frappe.db.sql("""select round(sum(leaf_count),0) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,date2,date1))
+		a=frappe.db.sql("""select section_area from `tabDaily Green Leaf in details` where section_id = %s """,(section_id))
+		act=round(leaf_c[0][0]/a[0][0],0)
+	return round(act*0.225,0)
+
 
 
 
@@ -207,6 +226,12 @@ def get_columns():
 		columns.append({
 			"label": _("done or not done"),
 			"fieldtype": "data",
+			"width":71
+		})
+
+		columns.append({
+			"label": _("Actual"),
+			"fieldtype": "round(float,0)",
 			"width":71
 		})
 

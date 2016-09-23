@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
+from datetime import datetime,timedelta
 from frappe import _
 from frappe import utils
 
@@ -19,11 +20,14 @@ class DailyGreenLeaf(Document):
 		self.get_bush_name()
 		self.get_prune_name()
 		self.calculate_today_budget()
+
+
 		self.validate_section_id()
 		self.validtae_area()
 		self.validate_uniqueness()
 
 	
+		self.calculate_round_number()
 		
 		
 
@@ -132,4 +136,28 @@ class DailyGreenLeaf(Document):
 			#if (frappe.utils.get_datetime(self.date).strftime('%Y')=="2016" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2017" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2018" or frappe.utils.get_datetime(self.date).strftime('%Y')=="2019"):
 			prune_cycle=frappe.db.sql("""select bush_type from `tabPruning Cycle` where year=%s and section_id=%s""",(frappe.utils.get_datetime(self.date).strftime('%Y'),i.section_id))
 			i.bush_type=prune_cycle[0][0]
-							
+
+
+
+	def calculate_round_number(self):	
+					
+		for i in self.leaf_details:
+			section_area  =i.section_area
+			previous_day  = datetime.strptime(i.date,'%Y-%m-%d')-timedelta(days=1)
+			plucked_area  =frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s and docstatus=1""",(i.section_id,'2016-01-01',previous_day.date()))
+			if plucked_area[0][0] is None:
+				if i.area >= section_area:
+					i.round_number = i.area/section_area
+				else:
+					i.round_number = 0	
+			else:
+				i.round_number = (plucked_area[0][0]+i.area)/section_area 
+				#frappe.throw(last_round_no)	
+
+			if float(i.round_number).is_integer():
+				i.mark="Yes"
+			else:
+				i.mark="No"
+
+			#previous_day  = datetime.strptime(i.date,'%Y-%m-%d')-timedelta(days=1)
+			
