@@ -154,10 +154,20 @@ class DailyGreenLeaf(Document):
 				i.round_number = (plucked_area[0][0]+i.area)/section_area 
 				#frappe.throw(last_round_no)	
 
-			if float(i.round_number).is_integer():
+			if round(float(i.round_number),2).is_integer():
 				i.mark="Yes"
 			else:
 				i.mark="No"
 
-			#previous_day  = datetime.strptime(i.date,'%Y-%m-%d')-timedelta(days=1)
-			
+
+			date1=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where mark='Yes' and docstatus=1 and section_id=%s""",(i.section_id))
+			area1=frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_id = %s and date>%s and docstatus=1""",(i.section_id,date1))
+			if area1[0][0]:
+				if (area1[0][0]+i.area)>i.section_area:
+					frappe.throw("please check whatever area you have entered is not correct")			#previous_day  = datetime.strptime(i.date,'%Y-%m-%d')-timedelta(days=1)
+				elif (area1[0][0]+i.area)==i.section_area:
+					i.mark = "Yes"
+				else:
+					i.mark = "No"
+			else:
+				mark = 'No'			
