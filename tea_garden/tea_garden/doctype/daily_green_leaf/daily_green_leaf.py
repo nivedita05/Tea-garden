@@ -147,14 +147,14 @@ class DailyGreenLeaf(Document):
 			plucked_area  =frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s and docstatus=1""",(i.section_id,'2016-01-01',previous_day.date()))
 			if plucked_area[0][0] is None:
 				if i.area >= section_area:
-					i.round_number = i.area/section_area
+					i.round_number =round( i.area/section_area,4)
 				else:
 					i.round_number = 0	
 			else:
-				i.round_number = (plucked_area[0][0]+i.area)/section_area 
+				i.round_number = round((plucked_area[0][0]+i.area)/section_area,4) 
 				#frappe.throw(last_round_no)	
 
-			if round(float(i.round_number),2).is_integer():
+			if round(float(i.round_number),4).is_integer():
 				i.mark="Yes"
 			else:
 				i.mark="No"
@@ -163,11 +163,13 @@ class DailyGreenLeaf(Document):
 			date1=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where mark='Yes' and docstatus=1 and section_id=%s""",(i.section_id))
 			area1=frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_id = %s and date>%s and docstatus=1""",(i.section_id,date1))
 			if area1[0][0]:
-				if (area1[0][0]+i.area)>i.section_area:
-					frappe.throw("please check whatever area you have entered is not correct")			#previous_day  = datetime.strptime(i.date,'%Y-%m-%d')-timedelta(days=1)
-				elif (area1[0][0]+i.area)==i.section_area:
+				if round((area1[0][0]+i.area),2)>round(i.section_area,2):
+					#frappe.throw("please check whatever area you have entered is not correct")
+					frappe.throw(_("Section area entered for {0} is not correct").format(i.section_name))
+					#frappe.throw(i.section_id)			#previous_day  = datetime.strptime(i.date,'%Y-%m-%d')-timedelta(days=1)
+				elif round((area1[0][0]+i.area),2)==round(i.section_area,2):
 					i.mark = "Yes"
-				else:
-					i.mark = "No"
+				#else:
+					#i.mark = "No"
 			else:
 				mark = 'No'			
