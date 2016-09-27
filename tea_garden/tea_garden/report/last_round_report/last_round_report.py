@@ -171,18 +171,64 @@ def get_actual_budget(section_id,filters):
 	
 	budget=frappe.db.sql("""select january,february,march,april,may, june,july,august,september,november,december from `tabPruning Cycle` where section_id = %s and prune_type=%s""",(section_id, filters.prune_type)) 
 	to_date=get_to_date(section_id,filters)
+	date1=datetime.strptime(to_date[0][0],'%Y-%m-%d')
+	date2=date1.date().strftime('%d')
 
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="01"):
+		return round((float(budget[0][0])*float(date2))/31,0)
+	
 
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="02"):
+		return round(float(budget[0][0])+((float(budget[0][1])*float(date2))/28),0)
+	
+
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="03"):
+		return round(float(budget[0][0])+float(budget[0][1])+((float(budget[0][2])*float(date2))/31),0)
+	
+
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="04"):
+		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+((float(budget[0][3])*float(date2))/30),0)
+	
+
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="05"):
+		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+float(budget[0][3])+((float(budget[0][4])*float(date2))/31),0)
+	
+
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="06"):
+		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+float(budget[0][3])+float(budget[0][4])+((float(budget[0][5])*float(date2))/30),0)
+	
+
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="07"):
+		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+float(budget[0][3])+float(budget[0][4])+float(budget[0][5])+((float(budget[0][6])*float(date2))/31),0)
+	
+	
 	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="08"):
-		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+float(budget[0][3])+float(budget[0][4])+float(budget[0][5])+float(budget[0][6])+((float(budget[0][7])*24)/31),0)
+		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+float(budget[0][3])+float(budget[0][4])+float(budget[0][5])+float(budget[0][6])+((float(budget[0][7])*float(date2))/31),0)
+	
 
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="09"):
+		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+float(budget[0][3])+float(budget[0][4])+float(budget[0][5])+float(budget[0][6])+float(budget[0][7])+((float(budget[0][8])*float(date2))/30),0)
+	
 
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="10"):
+		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+float(budget[0][3])+float(budget[0][4])+float(budget[0][5])+float(budget[0][6])+float(budget[0][7])+float(budget[0][8])+((float(budget[0][9])*float(date2))/31),0)
+	
+
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="11"):
+		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+float(budget[0][3])+float(budget[0][4])+float(budget[0][5])+float(budget[0][6])+float(budget[0][7])+float(budget[0][8])+float(budget[0][9])+((float(budget[0][10])*float(date2))/30),0)
+		
+	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="12"):
+		return round(float(budget[0][0])+float(budget[0][1])+float(budget[0][2])+float(budget[0][3])+float(budget[0][4])+float(budget[0][5])+float(budget[0][6])+float(budget[0][7])+float(budget[0][8])+float(budget[0][9])+float(budget[0][10])+((float(budget[0][11])*float(date2))/31),0)
+	
+
+	
+	
+	
 def get_actual_plus_minus_percentage(section_id,filters):
 	act=get_actual_gree_leaf(section_id,filters)
 	bud=get_actual_budget(section_id,filters)
 	perc=round((act-bud)*100/bud,2)
 	return perc
-
 
 
 def get_sle_conditions(filters):
