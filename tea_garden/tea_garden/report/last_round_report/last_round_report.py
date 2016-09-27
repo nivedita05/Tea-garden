@@ -16,8 +16,9 @@ def execute(filters=None):
 	columns = get_columns()
 	report_entries = get_report_entries(filters)
 	data = []
-	
-	
+	t_section_area = 0
+	t_yield=0
+	t_yearly_budget=0
 
 	for sle in report_entries:
 
@@ -34,15 +35,35 @@ def execute(filters=None):
 		act1=get_actual_gree_leaf(sle.section_id,filters)
 		bud1=get_actual_budget(sle.section_id,filters)
 		perc1=get_actual_plus_minus_percentage(sle.section_id,filters)
-		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,todate_round,from_date,to_date,act,bud,perc,act1,bud1,perc1])
+
+		in_kgs=gain_loss_in_kgs(sle.section_id,filters)
+		proj=get_proj_yield(sle.section_id,filters)
+		achv_perc=get_achive_percentage(sle.section_id,filters)
+
+
+
+		t_section_area += section_detail[0][0]
+		t_yield+=section_detail[0][0]*bud1
+		t_yearly_budget+=section_detail[0][0]*proj[0][0]
 		
+		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,todate_round,from_date,to_date,act,bud,perc,act1,bud1,perc1,in_kgs,proj,achv_perc])
+	
+
+	todate_yield=todate_yield_act(filters)	
+	todate_yield_actual=round(todate_yield/t_section_area,2)
+	todate_yield_budget=round(t_yield/t_section_area ,2)
+	percentage=round(((todate_yield_actual-todate_yield_budget)*100)/todate_yield_budget,2)
+	yearly_budget=round(t_yearly_budget/t_section_area,2)
+	achieve_percentage=round((todate_yield_actual/yearly_budget)*100,2)
+
+	data.append(['Total','','',t_section_area,'','Todate Yield',' ',' ', ' ',' ',todate_yield_actual,todate_yield_budget,percentage,' ',yearly_budget,achieve_percentage])
 	return columns, data
 
 
-	
+def todate_yield_act(filters):
+	todate_yield=frappe.db.sql("""select sum(leaf_count) from `tabDaily Green Leaf in details` where  prune_type=%s and date between %s and %s """,(filters.prune_type,'2016-01-01',filters.date))
+	return todate_yield[0][0]*0.225
 
-
-# , sle.section_area, sle.area, sle.prune_type, sle.bush_type
 
 
 def get_report_entries(filters):
@@ -231,6 +252,24 @@ def get_actual_plus_minus_percentage(section_id,filters):
 	return perc
 
 
+def gain_loss_in_kgs(section_id,filters):
+	act=get_actual_gree_leaf(section_id,filters)
+	bud=get_actual_budget(section_id,filters)
+	area=get_section_details(section_id,filters)
+	in_kgs=round(round(act-bud)*area[0][0],0)
+	return in_kgs
+
+def get_proj_yield(section_id,filters):
+	return frappe.db.sql("""select projected_yield from `tabPruning Cycle` where section_id=%s """,(section_id))
+
+
+def get_achive_percentage(section_id,filters):
+	proj=get_proj_yield(section_id,filters)
+	act=get_actual_gree_leaf(section_id,filters)
+	achv_perc=(act*100)/proj[0][0]
+	return round(achv_perc,2)
+
+
 def get_sle_conditions(filters):
 	conditions = []
 	return "and {}".format(" and ".join(conditions)) if conditions else ""
@@ -276,7 +315,7 @@ def get_columns():
 		
 		columns.append({
 			"label": _("Round"),
-			"fieldtype": "round(Float,0)",
+			"fieldtype": "round(float,0)",
 			"width":71
 		})
 
@@ -328,10 +367,29 @@ def get_columns():
 			"width":71
 		})
 
+		columns.append({
+			"label": _("G/L"),
+			"fieldtype": "data",
+			"width":71
+		})
+
+		columns.append({
+			"label": _("Projected Yield"),
+			"fieldtype": "data",
+			"width":71
+		})
+		columns.append({
+			"label": _("Achv Perc"),
+			"fieldtype": "data",
+			"width":71
+		})
+
+
 
 		
 
 		
 		return columns
+
 
 	

@@ -4,7 +4,10 @@
 // Copyright (c) 2016, frappe and contributors
 // For license information, please see license.txt
 
-frappe.query_reports["Last Round Report"] = {
+// Copyright (c) 2016, frappe and contributors
+// For license information, please see license.txt
+
+frappe.query_reports["Summary"] = {
 	"filters": [
 	 {
             "fieldname":"date",
@@ -25,27 +28,7 @@ frappe.query_reports["Last Round Report"] = {
             "reqd":1
          },
 
-        {
-            "fieldname":"bush_type",
-            "label": __("Bush"),
-            "fieldtype":"Select",
-            "options": [
-                { "value": "Mature"},
-                { "value" : "Young"}],
-            "default": "Mature",
-            "reqd":1
-         },
-
-        {
-            "fieldname":"prune_type",
-            "label": __("Prune"),
-            "fieldtype": "Link",
-            "options": "Prune Type",
-            "default": "",
-            "reqd":1
-         },
-
-        
+       
 
 	]
 		
