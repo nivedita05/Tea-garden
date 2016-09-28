@@ -39,18 +39,18 @@ def get_report_entries(filters):
 	return frappe.db.sql("""select distinct prune_type,bush_type from `tabDaily Green Leaf in details` where estate_name = %s order by bush_type """,(filters.estate_name),as_dict=1)
 
 def get_area(prune_type,bush_type,filters):
-	return frappe.db.sql("""select sum(distinct(section_area)) from `tabDaily Green Leaf in details` where prune_type= %s and bush_type=%s  and date BETWEEN %s and %s""",(prune_type,bush_type,'2016-01-01',filters.date)) 
+	return frappe.db.sql("""select sum(distinct(section_area)) from `tabDaily Green Leaf in details` where prune_type= %s and bush_type=%s  and date BETWEEN %s and %s""",(prune_type,bush_type,datetime(datetime.now().year, 1, 1),filters.date)) 
 
 
 def todate_yield_act(prune_type,bush_type,filters):
-	todate_yield=frappe.db.sql("""select sum(leaf_count) from `tabDaily Green Leaf in details` where  prune_type=%s and date between %s and %s """,(prune_type,'2016-01-01',filters.date))
+	todate_yield=frappe.db.sql("""select sum(leaf_count) from `tabDaily Green Leaf in details` where  prune_type=%s and date between %s and %s """,(prune_type,datetime(datetime.now().year, 1, 1),filters.date))
 	area=get_area(prune_type,bush_type,filters)
 	return round((todate_yield[0][0]*0.225)/area[0][0],2)
 
 
 def todate_yield_budget(prune_type,bush_type,filters):
 	t_budget=0
-	sections=frappe.db.sql("""select distinct section_id,section_area from `tabDaily Green Leaf in details` where prune_type=%s and bush_type=%s and date between %s and %s  """,(prune_type,bush_type,'2016-01-01',filters.date),as_dict=1)
+	sections=frappe.db.sql("""select distinct section_id,section_area from `tabDaily Green Leaf in details` where prune_type=%s and bush_type=%s and date between %s and %s  """,(prune_type,bush_type,datetime(datetime.now().year, 1, 1),filters.date),as_dict=1)
 	area=get_area(prune_type,bush_type,filters)
 	for sle in sections:
 		budget = get_actual_budget(sle.section_id,filters,prune_type)

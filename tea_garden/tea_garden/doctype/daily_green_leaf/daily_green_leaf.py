@@ -144,7 +144,7 @@ class DailyGreenLeaf(Document):
 		for i in self.leaf_details:
 			section_area  =i.section_area
 			previous_day  = datetime.strptime(i.date,'%Y-%m-%d')-timedelta(days=1)
-			plucked_area  =frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s and docstatus=1""",(i.section_id,'2016-01-01',previous_day.date()))
+			plucked_area  =frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s and docstatus=1""",(i.section_id,datetime(datetime.now().year, 1, 1),previous_day.date()))
 			if plucked_area[0][0] is None:
 				if i.area >= section_area:
 					i.round_number =round( i.area/section_area,4)

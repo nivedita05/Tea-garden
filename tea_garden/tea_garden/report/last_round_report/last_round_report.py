@@ -63,20 +63,20 @@ def execute(filters=None):
 
 
 def todate_yield_act(filters):
-	todate_yield=frappe.db.sql("""select sum(leaf_count) from `tabDaily Green Leaf in details` where  prune_type=%s and date between %s and %s """,(filters.prune_type,'2016-01-01',filters.date))
+	todate_yield=frappe.db.sql("""select sum(leaf_count) from `tabDaily Green Leaf in details` where  prune_type=%s and date between %s and %s """,(filters.prune_type,datetime(datetime.now().year, 1, 1),filters.date))
 	return todate_yield[0][0]*0.225
 
 
 
 def get_report_entries(filters):
-	return frappe.db.sql("""select distinct section_id,section_name,division_name from `tabDaily Green Leaf in details` where estate_name = %s and prune_type=%s and bush_type=%s and date BETWEEN %s AND %s ORDER BY section_id ASC""",(filters.estate_name,filters.prune_type,filters.bush_type,'2016-01-01', filters.date),as_dict=1)
+	return frappe.db.sql("""select distinct section_id,section_name,division_name from `tabDaily Green Leaf in details` where estate_name = %s and prune_type=%s and bush_type=%s and date BETWEEN %s AND %s ORDER BY section_id ASC""",(filters.estate_name,filters.prune_type,filters.bush_type,datetime(datetime.now().year, 1, 1), filters.date),as_dict=1)
 
 def get_section_details(section_id,filters):
-	return frappe.db.sql("""select min(section_area) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s and %s""",(section_id,'2016-01-01',filters.date)) 
+	return frappe.db.sql("""select min(section_area) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s and %s""",(section_id,datetime(datetime.now().year, 1, 1),filters.date)) 
 
 
 def get_round(section_id,filters):
-	return frappe.db.sql("""select round(sum(area)/section_area,2) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, '2016-01-01',filters.date))
+	return frappe.db.sql("""select round(sum(area)/section_area,2) from `tabDaily Green Leaf in details` where section_id = %s and date BETWEEN %s AND %s ORDER BY date DESC LIMIT 1 """,(section_id, datetime(datetime.now().year, 1, 1),filters.date))
 
 
 #-------------------------------------------------------------------------
@@ -93,7 +93,7 @@ def get_round(section_id,filters):
 
 def get_from_date(section_id,filters):
 
-	to_date=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id=%s and mark='Yes' and date between %s and %s """,(section_id,'2016-01-01',filters.date))
+	to_date=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id=%s and mark='Yes' and date between %s and %s """,(section_id,datetime(datetime.now().year, 1, 1),filters.date))
 	area_plucked=frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id=%s and date=%s """,(section_id,to_date))
 	original_area=get_section_details(section_id,filters)
 	if area_plucked[0][0]== original_area[0][0]:
@@ -130,12 +130,12 @@ def get_from_date(section_id,filters):
 #----------------------------------------------------------
 
 def get_to_date(section_id,filters):
-	to_date=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id=%s and mark='Yes' and date between %s and %s """,(section_id,'2016-01-01',filters.date))
+	to_date=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id=%s and mark='Yes' and date between %s and %s """,(section_id,datetime(datetime.now().year, 1, 1),filters.date))
 	return to_date
 	
 #------------------------------------------------------------
 
-	#date1=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,'2016-01-01',filters.date))
+	#date1=frappe.db.sql("""select max(date) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,datetime(datetime.now().year, 1, 1),filters.date))
 	#single_day=find_round(section_id,filters)
 	#if single_day=="complete":
 	#	to=date1
@@ -183,7 +183,7 @@ def get_actual_gree_leaf(section_id,filters):
 	to_date=get_to_date(section_id,filters)
 	
 		
-	leaf_c=frappe.db.sql("""select round(sum(leaf_count),0) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,'2016-01-01',filters.date))
+	leaf_c=frappe.db.sql("""select round(sum(leaf_count),0) from `tabDaily Green Leaf in details` where section_id = %s and date between %s and %s""",(section_id,datetime(datetime.now().year, 1, 1),filters.date))
 	a=frappe.db.sql("""select section_area from `tabDaily Green Leaf in details` where section_id = %s """,(section_id))
 	act=round(leaf_c[0][0]/a[0][0],0)
 	
