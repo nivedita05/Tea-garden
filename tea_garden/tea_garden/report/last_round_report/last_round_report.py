@@ -1,3 +1,5 @@
+
+
 # Copyright (c) 2013, frappe and contributors
 # For license information, please see license.txt
 
@@ -33,7 +35,7 @@ def execute(filters=None):
 		perc=get_plus_minus_percentage(sle.section_id,filters)
 		#done_or_not_done=find_round(sle.section_id,filters)
 		act1=get_actual_gree_leaf(sle.section_id,filters)
-		bud1=get_actual_budget(sle.section_id,filters)
+		bud1=get_actual_budget(sle.section_id,filters,filters.prune_type)
 		perc1=get_actual_plus_minus_percentage(sle.section_id,filters)
 
 		in_kgs=gain_loss_in_kgs(sle.section_id,filters)
@@ -187,10 +189,10 @@ def get_actual_gree_leaf(section_id,filters):
 	
 	return round(act*0.225,0)
 
-def get_actual_budget(section_id,filters):
+def get_actual_budget(section_id,filters,prune_type):
 	
 	
-	budget=frappe.db.sql("""select january,february,march,april,may, june,july,august,september,november,december from `tabPruning Cycle` where section_id = %s and prune_type=%s""",(section_id, filters.prune_type)) 
+	budget=frappe.db.sql("""select january,february,march,april,may, june,july,august,september,november,december from `tabPruning Cycle` where section_id = %s and prune_type=%s""",(section_id,prune_type)) 
 	to_date=get_to_date(section_id,filters)
 	date1=datetime.strptime(to_date[0][0],'%Y-%m-%d')
 	date2=date1.date().strftime('%d')
@@ -247,14 +249,14 @@ def get_actual_budget(section_id,filters):
 	
 def get_actual_plus_minus_percentage(section_id,filters):
 	act=get_actual_gree_leaf(section_id,filters)
-	bud=get_actual_budget(section_id,filters)
+	bud=get_actual_budget(section_id,filters,filters.prune_type)
 	perc=round((act-bud)*100/bud,2)
 	return perc
 
 
 def gain_loss_in_kgs(section_id,filters):
 	act=get_actual_gree_leaf(section_id,filters)
-	bud=get_actual_budget(section_id,filters)
+	bud=get_actual_budget(section_id,filters,filters.prune_type)
 	area=get_section_details(section_id,filters)
 	in_kgs=round(round(act-bud)*area[0][0],0)
 	return in_kgs
