@@ -13,7 +13,21 @@ def execute(filters=None):
 	report_entries = get_report_entries(filters)
 	data = []
 	
-	
+
+	t_section_detail=0
+	t_section_detail_1=0
+	t_todate_area=0
+	t_todate_pluckers=0
+	t_todate_green_leaf=0
+	t_pluckers_per_hector=0
+	t_green_leaf_hector=0
+	t_plucking_avg=0
+	t_round=0
+	t_yield_per_hector=0
+	t_budget=0
+	t_percent_of_crop=0
+	t_r_per_days=0
+
 
 	for sle in report_entries:
 		todate_area    = get_todate_area_pluck(sle.section_id,filters)
@@ -26,13 +40,33 @@ def execute(filters=None):
 		todate_yeild_hector=get_todate_yield_per_hector(sle.section_id,filters)
 		section_detail = get_section_details(sle.section_id,filters)
 		section_detail1=get_section_details1(sle.section_id,filters)
-		
+
 		budget_details=get_budget(sle.section_id,filters)
-		pecent_of_crop=get_percent_of_year_croped(sle.section_id,filters)
+		percent_of_crop=get_percent_of_year_croped(sle.section_id,filters)
 		date=get_starting_date(sle.section_id,filters)
 
-		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,section_detail1,todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,pecent_of_crop,date])
-		
+
+		t_section_detail+=section_detail[0][0]
+		t_section_detail_1=get_section_details2(sle.section_id,filters)
+		t_todate_area+=todate_area[0][0]
+		t_todate_pluckers+=todate_pluckers[0][0]
+		t_todate_green_leaf+=todate_leaf_count[0][0]
+		t_pluckers_per_hector+=todate_pluckers_hector[0][0]
+		t_green_leaf_hector+=todate_green_leaf_hector[0][0]
+		t_plucking_avg+=todate_plucking_avg[0][0]
+		t_round+=todate_round[0][0]*section_detail[0][0]
+		t_yield_per_hector+=todate_yeild_hector[0][0]*section_detail[0][0]
+		t_budget+=budget_details[0][0]*section_detail[0][0]
+		t_percent_of_crop+=percent_of_crop*section_detail[0][0]
+		t_r_per_days+=date*section_detail[0][0]
+		#t_yield+=section_detail[0][0]*bud1
+		#t_yearly_budget+=section_detail[0][0]*proj[0][0]
+
+		data.append([sle.division_name,sle.section_id,sle.section_name,section_detail,section_detail1,todate_area,todate_pluckers,todate_leaf_count,todate_pluckers_hector,todate_green_leaf_hector,todate_plucking_avg, todate_round,todate_yeild_hector,budget_details,percent_of_crop,date])
+	
+
+	data.append(['Total','','',t_section_detail,t_section_detail_1,t_todate_area,t_todate_pluckers,t_todate_green_leaf,round(t_todate_pluckers/t_todate_area,2),round(t_todate_green_leaf/t_todate_area,2),round(t_todate_green_leaf/t_todate_pluckers,2),round(t_round/t_section_detail,0),round(t_yield_per_hector/t_section_detail,2),round(t_budget/t_section_detail,0),round(t_percent_of_crop/t_section_detail,2),round(t_r_per_days/t_section_detail,0)])
+
 	return columns, data
 
 
@@ -86,6 +120,8 @@ def get_section_details(section_id,filters):
 def get_section_details1(section_id,filters):
 	return frappe.db.sql("""select area from `tabDaily Green Leaf in details` where section_id = %s and date=%s""",(section_id,filters.date)) 
 
+def get_section_details2(section_id,filters):
+	return frappe.db.sql("""select sum(area) from `tabDaily Green Leaf in details` where section_id = %s and date=%s""",(section_id,filters.date)) 
 
 
 def get_budget(section_id,filters):
