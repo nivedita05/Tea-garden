@@ -1,3 +1,5 @@
+
+
 # Copyright (c) 2013, frappe and contributors
 # For license information, please see license.txt
 
@@ -45,7 +47,10 @@ def get_area(prune_type,bush_type,filters):
 def todate_yield_act(prune_type,bush_type,filters):
 	todate_yield=frappe.db.sql("""select sum(leaf_count) from `tabDaily Green Leaf in details` where  prune_type=%s and date between %s and %s """,(prune_type,datetime(datetime.now().year, 1, 1),filters.date))
 	area=get_area(prune_type,bush_type,filters)
-	return round((todate_yield[0][0]*0.225)/area[0][0],2)
+	if todate_yield[0][0] is None or area[0][0] is None:
+		return 0
+	else:
+		return round((todate_yield[0][0]*0.225)/area[0][0],2)
 
 
 def todate_yield_budget(prune_type,bush_type,filters):
@@ -53,9 +58,12 @@ def todate_yield_budget(prune_type,bush_type,filters):
 	sections=frappe.db.sql("""select distinct section_id,section_area from `tabDaily Green Leaf in details` where prune_type=%s and bush_type=%s and date between %s and %s  """,(prune_type,bush_type,datetime(datetime.now().year, 1, 1),filters.date),as_dict=1)
 	area=get_area(prune_type,bush_type,filters)
 	for sle in sections:
-		budget = get_actual_budget(sle.section_id,filters,prune_type)
-		t_budget += budget * sle.section_area
-	return round((t_budget/area[0][0]),2)	
+		#budget = get_actual_budget(sle.section_id,filters,prune_type)
+		t_budget += 5*sle.section_area
+	if area[0][0] is None:
+		return 0
+	else:
+		return round((t_budget/area[0][0]),2)
 
 
 def todate_yield_plus_minus(prune_type,bush_type,filters):
@@ -68,7 +76,10 @@ def made_tea(prune_type,bush_type,filters):
 	act=todate_yield_act(prune_type,bush_type,filters)
 	budget=todate_yield_budget(prune_type,bush_type,filters)
 	area=get_area(prune_type,bush_type,filters)
-	return round((act-budget)* area[0][0],0)
+	if area[0][0] is None:
+		return 0
+	else:
+		return round((act-budget)* area[0][0],0)
 
 
 def get_columns():

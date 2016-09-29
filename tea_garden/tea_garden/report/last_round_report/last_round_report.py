@@ -192,17 +192,24 @@ def get_actual_gree_leaf(section_id,filters):
 def get_actual_budget(section_id,filters,prune_type):
 	
 	
-	budget=frappe.db.sql("""select january,february,march,april,may, june,july,august,september,november,december from `tabPruning Cycle` where section_id = %s and prune_type=%s""",(section_id,prune_type)) 
+	budget=frappe.db.sql("""select coalesce(january,0),coalesce(february,0),coalesce(march,0),coalesce(april,0),coalesce(may,0),coalesce(june,0),coalesce(july,0),coalesce(august,0),coalesce(september,0),coalesce(november,0),coalesce(december,0) from `tabPruning Cycle` where section_id = %s and prune_type=%s""",(section_id,prune_type)) 
 	to_date=get_to_date(section_id,filters)
 	date1=datetime.strptime(to_date[0][0],'%Y-%m-%d')
 	date2=date1.date().strftime('%d')
-
 	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="01"):
-		return round((float(budget[0][0])*float(date2))/31,0)
+		if (budget[0][0] is None):
+			return 0
+		else:
+			return round((float(budget[0][0])*float(date2))/31,0)
 	
 
 	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="02"):
-		return round(float(budget[0][0])+((float(budget[0][1])*float(date2))/28),0)
+		if (budget[0][0] is None):
+			return round(((float(budget[0][1])*float(date2))/28),0)
+		elif(budget[0][1] is None):
+			return round(float(budget[0][0]),0)
+		else:
+			return round(float(budget[0][0])+((float(budget[0][1])*float(date2))/28),0)
 	
 
 	if(frappe.utils.get_datetime(filters.date).strftime('%m')=="03"):
