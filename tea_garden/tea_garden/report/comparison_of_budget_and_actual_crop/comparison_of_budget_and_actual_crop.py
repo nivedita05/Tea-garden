@@ -8,6 +8,7 @@ from frappe.model.document import Document
 from frappe import utils
 from frappe.utils import flt
 from datetime import datetime,timedelta
+import calendar
 
 
 
@@ -17,23 +18,26 @@ def execute(filters=None):
 	data = []
 
 	for sle in report_entries:
-		month_wise_budget_for_jan=get_month_wise_budget_for_jan(sle.section_name,filters)
-		month_wise_budget_for_feb=get_month_wise_budget_for_feb(sle.section_name,filters)
+		month_wise_budget_for_jan=get_monthly_budget(sle.section_name,filters,"01")
+		month_wise_budget_for_feb=get_monthly_budget(sle.section_name,filters,"02")
 		
-		month_wise_budget_for_mar=get_month_wise_budget_for_mar(sle.section_name,filters)
-		month_wise_budget_for_apr=get_month_wise_budget_for_apr(sle.section_name,filters)
+		month_wise_budget_for_mar=get_monthly_budget(sle.section_name,filters,"03")
+		month_wise_budget_for_apr=get_monthly_budget(sle.section_name,filters,"04")
 
-		month_wise_budget_for_may=get_month_wise_budget_for_may(sle.section_name,filters)
-		month_wise_budget_for_jun=get_month_wise_budget_for_jun(sle.section_name,filters)
+		month_wise_budget_for_may=get_monthly_budget(sle.section_name,filters,"05")
+		month_wise_budget_for_jun=get_monthly_budget(sle.section_name,filters,"06")
 
-		month_wise_budget_for_jul=get_month_wise_budget_for_jul(sle.section_name,filters)
-		month_wise_budget_for_aug=get_month_wise_budget_for_aug(sle.section_name,filters)
+		month_wise_budget_for_jul=get_monthly_budget(sle.section_name,filters,"07")
+		month_wise_budget_for_aug=get_monthly_budget(sle.section_name,filters,"08")
 
-		month_wise_budget_for_sep=get_month_wise_budget_for_sep(sle.section_name,filters)
-		month_wise_budget_for_oct=get_month_wise_budget_for_oct(sle.section_name,filters)
+		month_wise_budget_for_sep=get_monthly_budget(sle.section_name,filters,"09")
+		month_wise_budget_for_oct=get_monthly_budget(sle.section_name,filters,"10")
 
-		month_wise_budget_for_nov=get_month_wise_budget_for_nov(sle.section_name,filters)
-		month_wise_budget_for_dec=get_month_wise_budget_for_dec(sle.section_name,filters)
+		month_wise_budget_for_nov=get_monthly_budget(sle.section_name,filters,"11")
+		month_wise_budget_for_dec=get_monthly_budget(sle.section_name,filters,"12")
+
+		
+
 
 		total=get_projected_yield(sle.section_name,filters)
 		vac=get_vacancy_percentage(sle.section_name,filters)
@@ -41,63 +45,203 @@ def execute(filters=None):
 
 
 
-		month_wise_act_for_jan=get_act_for_jan(sle.section_name,filters)
-		month_wise_act_for_feb=get_act_for_feb(sle.section_name,filters)
+		month_wise_act_for_jan=get_monthly_act(sle.section_name,filters,"01")
+		month_wise_act_for_feb=get_monthly_act(sle.section_name,filters,"02")
 
-		month_wise_act_for_mar=get_act_for_mar(sle.section_name,filters)
-		month_wise_act_for_apr=get_act_for_apr(sle.section_name,filters)
-
-
-		month_wise_act_for_may=get_act_for_may(sle.section_name,filters)
-		month_wise_act_for_jun=get_act_for_jun(sle.section_name,filters)
-
-		month_wise_act_for_jul=get_act_for_jul(sle.section_name,filters)
-		month_wise_act_for_aug=get_act_for_aug(sle.section_name,filters)
-
-		month_wise_act_for_sep=get_act_for_sep(sle.section_name,filters)
-		month_wise_act_for_oct=get_act_for_oct(sle.section_name,filters)
+		month_wise_act_for_mar=get_monthly_act(sle.section_name,filters,"03")
+		month_wise_act_for_apr=get_monthly_act(sle.section_name,filters,"04")
 
 
-		month_wise_act_for_nov=get_act_for_nov(sle.section_name,filters)
-		month_wise_act_for_dec=get_act_for_dec(sle.section_name,filters)
+		month_wise_act_for_may=get_monthly_act(sle.section_name,filters,"05")
+		month_wise_act_for_jun=get_monthly_act(sle.section_name,filters,"06")
+
+		month_wise_act_for_jul=get_monthly_act(sle.section_name,filters,"07")
+		month_wise_act_for_aug=get_monthly_act(sle.section_name,filters,"08")
+
+		month_wise_act_for_sep=get_monthly_act(sle.section_name,filters,"09")
+		month_wise_act_for_oct=get_monthly_act(sle.section_name,filters,"10")
+
+		month_wise_act_for_nov=get_monthly_act(sle.section_name,filters,"11")
+		month_wise_act_for_dec=get_monthly_act(sle.section_name,filters,"12")
 
 
 		act_total=get_act_for_year(sle.section_name,filters)
-
 		percent=round((act_total[0][0]*100)/total[0][0],0)
+
+
 		
 
-		jan_diff=get_diff_jan(sle.section_name,filters)
-		feb_diff=get_diff_feb(sle.section_name,filters)
+		jan_diff=get_diff(sle.section_name,filters,"01")
+		feb_diff=get_diff(sle.section_name,filters,"02")
 
-		mar_diff=get_diff_mar(sle.section_name,filters)
-		apr_diff=get_diff_apr(sle.section_name,filters)
+		mar_diff=get_diff(sle.section_name,filters,"03")
+		apr_diff=get_diff(sle.section_name,filters,"04")
 
-		may_diff=get_diff_may(sle.section_name,filters)
-		jun_diff=get_diff_jun(sle.section_name,filters)
+		may_diff=get_diff(sle.section_name,filters,"05")
+		jun_diff=get_diff(sle.section_name,filters,"06")
 		
-		jul_diff=get_diff_jul(sle.section_name,filters)
-		aug_diff=get_diff_aug(sle.section_name,filters)
+		jul_diff=get_diff(sle.section_name,filters,"07")
+		aug_diff=get_diff(sle.section_name,filters,"08")
 
-		sep_diff=get_diff_sep(sle.section_name,filters)
-		oct_diff=get_diff_oct(sle.section_name,filters)
+		sep_diff=get_diff(sle.section_name,filters,"09")
+		oct_diff=get_diff(sle.section_name,filters,"10")
 
-		nov_diff=get_diff_nov(sle.section_name,filters)
-		dec_diff=get_diff_dec(sle.section_name,filters)
+		nov_diff=get_diff(sle.section_name,filters,"11")
+		dec_diff=get_diff(sle.section_name,filters,"12")
 		
 		
 		tot_diff=total[0][0]-act_total[0][0]
+		per_mon_bud=get_budget_for_a_particular_mon(sle.section_name,filters,frappe.utils.get_datetime(filters.date).strftime('%m'))
+		per_mon_act=get_act_for_a_particular_mon(sle.section_name,filters,frappe.utils.get_datetime(filters.date).strftime('%m'))
+		per_mon_diff=get_diff_per_month(sle.section_name,filters,frappe.utils.get_datetime(filters.date).strftime('%m'))
 
-		data.append([sle.division_name,sle.section_name,'Budget',month_wise_budget_for_jan,month_wise_budget_for_feb,month_wise_budget_for_mar,month_wise_budget_for_apr,month_wise_budget_for_may,month_wise_budget_for_jun,month_wise_budget_for_jul,month_wise_budget_for_aug,month_wise_budget_for_sep,month_wise_budget_for_oct,month_wise_budget_for_nov,month_wise_budget_for_dec,total,percent,vac])
-		data.append(['','','Act',month_wise_act_for_jan,month_wise_act_for_feb,month_wise_act_for_mar,month_wise_act_for_apr,month_wise_act_for_may,month_wise_act_for_jun,month_wise_act_for_jul,month_wise_act_for_aug,month_wise_act_for_sep,month_wise_act_for_oct,month_wise_act_for_nov,month_wise_act_for_dec,act_total])
-		data.append(['','','(+/-)',jan_diff,feb_diff,mar_diff,apr_diff,may_diff,jun_diff,jul_diff,aug_diff,sep_diff,oct_diff,nov_diff,dec_diff,tot_diff])
+
+		mon_todate_act=get_todate_act_for_part_month(sle.section_name,filters)
+		mon_todate_bud=get_todate_bud_for_part_month(sle.section_name,filters,frappe.utils.get_datetime(filters.date).strftime('%m'))
+		mon_todate_diff=round(mon_todate_act[0][0]-mon_todate_bud,2)
+
+
+		per_cent=round((mon_todate_bud*100)/mon_todate_act[0][0],2)
+
+		bud_made_tea=round(sle.section_area*mon_todate_bud,0)
+		act_made_tea=round(sle.section_area*mon_todate_act[0][0],0)
+		diff_made_tea=round(act_made_tea-bud_made_tea,0)
+
+
+		data.append([sle.division_name,sle.section_name,sle.section_area,'Budget',month_wise_budget_for_jan,month_wise_budget_for_feb,month_wise_budget_for_mar,month_wise_budget_for_apr,month_wise_budget_for_may,month_wise_budget_for_jun,month_wise_budget_for_jul,month_wise_budget_for_aug,month_wise_budget_for_sep,month_wise_budget_for_oct,month_wise_budget_for_nov,month_wise_budget_for_dec,total,percent,vac,per_mon_bud,mon_todate_bud,per_cent,bud_made_tea])
+		data.append(['','','','Act',month_wise_act_for_jan,month_wise_act_for_feb,month_wise_act_for_mar,month_wise_act_for_apr,month_wise_act_for_may,month_wise_act_for_jun,month_wise_act_for_jul,month_wise_act_for_aug,month_wise_act_for_sep,month_wise_act_for_oct,month_wise_act_for_nov,month_wise_act_for_dec,act_total,'','',per_mon_act,mon_todate_act,'',act_made_tea])
+		data.append(['','','','(+/-)',jan_diff,feb_diff,mar_diff,apr_diff,may_diff,jun_diff,jul_diff,aug_diff,sep_diff,oct_diff,nov_diff,dec_diff,tot_diff,'','',per_mon_diff,mon_todate_diff,'',diff_made_tea])
 		data.append([])
 
 	return columns, data
 
 
 def get_report_entries(filters):
-	return frappe.db.sql("""select distinct division_name ,section_name from `tabDaily Green Leaf in details` where estate_name = %s and prune_type=%s order by division_name""",(filters.estate_name,filters.prune_type),as_dict=1)
+	return frappe.db.sql("""select distinct division_name ,section_name ,section_area from `tabDaily Green Leaf in details` where estate_name = %s and prune_type=%s order by division_name""",(filters.estate_name,filters.prune_type),as_dict=1)
+
+def get_monthly_budget(section_name,filters,month):
+
+	
+	#report_entries = get_report_entries(filters)
+	budget=0
+	#for sle in report_entries:
+
+	if month == "01" :
+		budget = get_month_wise_budget_for_jan(section_name,filters)
+	elif month == "02":
+		budget = get_month_wise_budget_for_feb(section_name,filters)
+	elif month == "03":
+		budget = get_month_wise_budget_for_mar(section_name,filters)
+	elif month == "04":
+		budget = get_month_wise_budget_for_apr(section_name,filters)
+	elif month == "05":
+		budget = get_month_wise_budget_for_may(section_name,filters)
+	elif month == "06":
+		budget = get_month_wise_budget_for_jun(section_name,filters)
+	elif month == "07":
+		budget = get_month_wise_budget_for_jul(section_name,filters)
+	elif month == "08":
+		budget = get_month_wise_budget_for_aug(section_name,filters)
+	elif month == "09":
+		budget = get_month_wise_budget_for_sep(section_name,filters)
+	elif month == "10":
+		budget = get_month_wise_budget_for_oct(section_name,filters)
+	elif month == "11":
+		budget = get_month_wise_budget_for_nov(section_name,filters)
+	elif month == "12":
+		budget = get_month_wise_budget_for_dec(section_name,filters)
+	return budget
+
+
+
+def get_monthly_act(section_name,filters,month):
+	
+	act=0
+	
+
+	if month == "01" :
+		act = get_act_for_jan(section_name,filters)
+	elif month == "02":
+		act = get_act_for_feb(section_name,filters)
+	elif month == "03":
+		act =get_act_for_mar(section_name,filters)
+	elif month == "04":
+		act = get_act_for_apr(section_name,filters)
+	elif month == "05":
+		act = get_act_for_may(section_name,filters)
+	elif month == "06":
+		act =get_act_for_jun(section_name,filters)
+	elif month == "07":
+		act =get_act_for_jul(section_name,filters)
+	elif month == "08":
+		act = get_act_for_aug(section_name,filters)
+	elif month == "09":
+		act =get_act_for_sep(section_name,filters)
+	elif month == "10":
+		act =get_act_for_oct(section_name,filters)
+	elif month == "11":
+		act =get_act_for_nov(section_name,filters)
+	elif month == "12":
+		act =get_act_for_dec(section_name,filters)
+	return act
+
+
+
+def get_diff(section_name,filters,month):
+	pass
+	
+	diff=0
+	
+
+	if month == "01" :
+		diff= get_diff_jan(section_name,filters)
+	elif month == "02":
+		diff = get_diff_feb(section_name,filters)
+	elif month == "03":
+		diff = get_diff_mar(section_name,filters)
+	elif month == "04":
+		diff = get_diff_apr(section_name,filters)
+	elif month == "05":
+		diff = get_diff_may(section_name,filters)
+	elif month == "06":
+		diff =get_diff_jun(section_name,filters)
+	elif month == "07":
+		diff = get_diff_jul(section_name,filters)
+	elif month == "08":
+		diff = get_diff_aug(section_name,filters)
+	elif month == "09":
+		diff = get_diff_sep(section_name,filters)
+	elif month == "10":
+		diff = get_diff_oct(section_name,filters)
+	elif month == "11":
+		diff =get_diff_nov(section_name,filters)
+	elif month == "12":
+		diff = get_diff_dec(section_name,filters)
+	return diff
+
+
+def get_budget_for_a_particular_mon(section_name,filters,month):
+	month=frappe.utils.get_datetime(filters.date).strftime('%m')
+	cur_mon_bud=get_monthly_budget(section_name,filters,month)
+	return round(float(cur_mon_bud[0][0])*float(frappe.utils.get_datetime(filters.date).strftime('%d'))/calendar.monthrange(int(frappe.utils.get_datetime(filters.date).strftime('%d')),int(month))[1],2)
+	#return cur_mon_bud
+	
+def get_act_for_a_particular_mon(section_name,filters,month):
+	month=frappe.utils.get_datetime(filters.date).strftime('%m')
+	cur_mon_act=get_monthly_act(section_name,filters,month)
+	return round(float(cur_mon_act[0][0])*float(frappe.utils.get_datetime(filters.date).strftime('%d'))/calendar.monthrange(int(frappe.utils.get_datetime(filters.date).strftime('%d')),int(month))[1],2)
+	#return cur_mon_act
+
+
+def get_diff_per_month(section_name,filters,month):
+	act=get_act_for_a_particular_mon(section_name,filters,month)
+	bud=get_budget_for_a_particular_mon(section_name,filters,month)
+	return round(act-bud,2)
+
+
+
+
+
 
 def get_month_wise_budget_for_jan(section_name,filters):
 	return frappe.db.sql("""select january from `tabPruning Cycle` where section_name=%s """,(section_name))
@@ -136,8 +280,14 @@ def get_month_wise_budget_for_dec(section_name,filters):
 	return frappe.db.sql("""select december from `tabPruning Cycle` where section_name=%s """,(section_name))
 
 
-def get_month_wise_budget_for_any_month(section_name,filters):
-	pass
+
+
+
+
+
+
+
+
 
 def get_projected_yield(section_name,filters):
 	return frappe.db.sql("""select projected_yield from `tabPruning Cycle` where section_name=%s """,(section_name))
@@ -184,8 +334,38 @@ def get_act_for_nov(section_name,filters):
 def get_act_for_dec(section_name,filters):
 	return frappe.db.sql("""select coalesce(round((sum(leaf_count)*0.225)/section_area,2),0) from `tabDaily Green Leaf in details` where section_name=%s and date between %s and %s """,(section_name,datetime(datetime.now().year, 12, 1),datetime(datetime.now().year,12,31)))
 
+
+
+
+
+
+
+def get_todate_act_for_part_month(section_name,filters):
+	return frappe.db.sql("""select coalesce(round((sum(leaf_count)*0.225)/section_area,2),0) from `tabDaily Green Leaf in details` where section_name=%s and date between %s and %s """,(section_name,datetime(datetime.now().year, 1, 1),filters.date))
+
+
+
+def get_todate_bud_for_part_month(section_name,filters,month):
+	month=frappe.utils.get_datetime(filters.date).strftime('%m')
+	bud = 0.0
+	for i in range(1,int(month)-1,1):
+		bud +=float(get_monthly_budget(section_name,filters,str(i).zfill(2))[0][0])
+
+	bud_mon=float(get_budget_for_a_particular_mon(section_name,filters,month))
+	bud=bud+bud_mon
+	return round(bud,2)
+
+
+
+
+
+
+
+
 def get_act_for_year(section_name,filters):
 	return frappe.db.sql("""select coalesce(round((sum(leaf_count)*0.225)/section_area,2),0) from `tabDaily Green Leaf in details` where section_name=%s and date between %s and %s """,(section_name,datetime(datetime.now().year, 1, 1),datetime(datetime.now().year,12,31)))
+
+
 
 
 def get_diff_jan(section_name,filters):
@@ -267,6 +447,14 @@ def get_columns():
 		"fieldtype": "Link",
 		"options": "Section",
 		"width": 150
+	    })
+
+
+	columns.append({
+		"fieldname": "section_area",
+		"label": _("Area"),
+		"fieldtype": "Float",
+		"width": 50
 	    })
 
 	columns.append({
@@ -373,8 +561,8 @@ def get_columns():
 
 
 	columns.append({
-		"fieldname": "%",
-		"label": _("%"),
+		"fieldname": "achv_%",
+		"label": _("achv %"),
 		"options": "Data",
 		"width": 70
 	    })
@@ -388,14 +576,33 @@ def get_columns():
 	    })
 
 
+	columns.append({
+		"fieldname": "mon",
+		"label": _("Mon"),
+		"options": "Data",
+		"width": 70
+	    })
+
+	columns.append({
+		"fieldname": "todate",
+		"label": _("Todate"),
+		"options": "Data",
+		"width": 70
+	    })
+	
+	columns.append({
+		"fieldname": "todate_%",
+		"label": _("todate %"),
+		"options": "Data",
+		"width": 70
+	    })
 
 
-
-
-
-
-
-
-
+	columns.append({
+		"fieldname": "made_tea",
+		"label": _("Made Tea"),
+		"options": "Data",
+		"width": 70
+	    })
 
 	return columns
