@@ -10,8 +10,14 @@ from frappe.model.document import Document
 from frappe import utils
 from frappe.utils import flt
 from datetime import datetime,timedelta
-from tea_garden.tea_garden.report.last_round_report.last_round_report import get_to_date,get_actual_budget,get_section_details
-import operator
+from tea_garden.tea_garden.report.comparison_of_budget_and_actual_crop.comparison_of_budget_and_actual_crop import \
+get_month_wise_budget_for_jan,get_month_wise_budget_for_feb,get_month_wise_budget_for_mar,get_month_wise_budget_for_apr,\
+get_month_wise_budget_for_may,get_month_wise_budget_for_jun,get_month_wise_budget_for_jul,get_month_wise_budget_for_aug,\
+get_month_wise_budget_for_sep,get_month_wise_budget_for_oct,get_month_wise_budget_for_nov,get_month_wise_budget_for_dec,\
+get_monthly_budget,get_budget_for_a_particular_mon
+
+from tea_garden.tea_garden.report.last_round_report.last_round_report import \
+get_budget_todate_yield
 #import timedelta
 #import json
 
@@ -55,11 +61,11 @@ def todate_yield_act(prune_type,bush_type,filters):
 
 def todate_yield_budget(prune_type,bush_type,filters):
 	t_budget=0
-	sections=frappe.db.sql("""select distinct section_id,section_area from `tabDaily Green Leaf in details` where prune_type=%s and bush_type=%s and date between %s and %s  """,(prune_type,bush_type,datetime(datetime.now().year, 1, 1),filters.date),as_dict=1)
+	sections=frappe.db.sql("""select distinct section_name,section_area from `tabDaily Green Leaf in details` where prune_type=%s and bush_type=%s and date between %s and %s  """,(prune_type,bush_type,datetime(datetime.now().year, 1, 1),filters.date),as_dict=1)
 	area=get_area(prune_type,bush_type,filters)
 	for sle in sections:
-		#budget = get_actual_budget(sle.section_id,filters,prune_type)
-		t_budget += 5*sle.section_area
+		budget = get_budget_todate_yield(sle.section_name,filters,prune_type)
+		t_budget += budget*sle.section_area
 	if area[0][0] is None:
 		return 0
 	else:
