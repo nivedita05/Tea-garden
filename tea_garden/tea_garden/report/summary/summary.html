@@ -1,0 +1,69 @@
+<style>
+    .print-format table, .print-format tr,
+    .print-format td, .print-format div, .print-format p {
+        font-family: Monospace;
+        line-height: 200%;
+        vertical-align: middle;
+    }
+
+    @media screen {
+        .print-format {
+            max-width: 13in;
+            padding: 0.25in;
+            min-height: 8.5in;
+        }
+    }
+</style>
+<div style="margin-bottom: 7px;" class="text-center">
+	
+</div>
+<h3 class="text-center">
+
+	{%= filters.estate_name %}
+	{%= __(":") %}
+	{%= filters.date %}
+	<br>
+	
+
+</h3>
+<hr>
+
+
+<b><h2 class="text-center">{%= __("Summary ") %}</h2></b>
+<hr>
+<table class="table table-bordered">
+    <thead>
+    	
+    <tr>
+    	<th>Sr No.</th>
+    	<th>Prune</th>
+    	<th>Bush</th>
+        <th>Area</th>
+        <th>Todate Yield</th>
+        <th>Budget</th>
+        <th>Todate Yield +/- </th>
+        <th>Made Tea</th>
+    </tr>
+    </thead>
+
+
+    <tbody>
+        {% for(var i=1, l=report.data.length; i<l; i++) { %}
+            <tr>
+            	<td class="text-center">{%= i %}</td>
+             	<td class="text-left">{%= report.data[i].prune_type %}</td>
+             	<td class="text-left">{%= report.data[i].bush_type %}</td>
+                <td class="text-left">{%= report.data[i].area %}</td>
+             	<td class="text-right">{%= report.data[i].todate_yield %}</td>
+             	
+             	
+				<td class="text-left">{%= report.data[i].bud %}</td>
+                <td class="text-left">{%= report.data[i].todate_yield_perc %}</td>
+                <td class="text-left">{%= report.data[i].made_tea %}</td>
+
+                
+
+            </tr> 	
+        {% } %}
+	</tbody>
+</table>

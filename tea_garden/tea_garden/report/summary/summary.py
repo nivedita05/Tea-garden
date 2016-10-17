@@ -108,6 +108,7 @@ def get_columns():
 
 
 		columns.append({
+				"fieldname": "area",
 				"label": _(" Area "),
 				"fieldtype": "Data",
 				"width": 90
@@ -115,18 +116,21 @@ def get_columns():
 	    
 
 	    	columns.append({
+				"fieldname": "todate_yield",
 				"label": _(" Todate Yield "),
 				"fieldtype": "Data",
 				"width": 90
 	    })
 
 	    	columns.append({
+	    		"fieldname": "bud",
 				"label": _(" Budget "),
 				"fieldtype": "Data",
 				"width": 90
 	    })
 	    
 	    	columns.append({
+	    		"fieldname": "todate_yield_perc",
 				"label": _("Todate Yield +/- "),
 				"fieldtype": "Data",
 				"width": 100
@@ -134,6 +138,7 @@ def get_columns():
 
 
 	    	columns.append({
+	    		"fieldname": "made_tea",
 				"label": _("Made Tea"),
 				"fieldtype": "Data",
 				"width": 100

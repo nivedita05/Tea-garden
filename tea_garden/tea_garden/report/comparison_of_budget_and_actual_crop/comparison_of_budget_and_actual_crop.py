@@ -17,6 +17,8 @@ def execute(filters=None):
 	report_entries = get_report_entries(filters)
 	data = []
 
+	
+
 	for sle in report_entries:
 		month_wise_budget_for_jan=get_monthly_budget(sle.section_name,filters,"01")
 		month_wise_budget_for_feb=get_monthly_budget(sle.section_name,filters,"02")
@@ -90,7 +92,7 @@ def execute(filters=None):
 		dec_diff=get_diff(sle.section_name,filters,"12")
 		
 		
-		tot_diff=total[0][0]-act_total[0][0]
+		tot_diff=act_total[0][0]-total[0][0]
 		per_mon_bud=get_budget_for_a_particular_mon(sle.section_name,filters,frappe.utils.get_datetime(filters.date).strftime('%m'))
 		per_mon_act=get_act_for_a_particular_mon(sle.section_name,filters,frappe.utils.get_datetime(filters.date).strftime('%m'))
 		per_mon_diff=get_diff_per_month(sle.section_name,filters,frappe.utils.get_datetime(filters.date).strftime('%m'))
@@ -110,8 +112,8 @@ def execute(filters=None):
 
 		data.append([sle.division_name,sle.section_name,sle.section_area,'Budget',month_wise_budget_for_jan,month_wise_budget_for_feb,month_wise_budget_for_mar,month_wise_budget_for_apr,month_wise_budget_for_may,month_wise_budget_for_jun,month_wise_budget_for_jul,month_wise_budget_for_aug,month_wise_budget_for_sep,month_wise_budget_for_oct,month_wise_budget_for_nov,month_wise_budget_for_dec,total,percent,vac,per_mon_bud,mon_todate_bud,per_cent,bud_made_tea])
 		data.append(['','','','Act',month_wise_act_for_jan,month_wise_act_for_feb,month_wise_act_for_mar,month_wise_act_for_apr,month_wise_act_for_may,month_wise_act_for_jun,month_wise_act_for_jul,month_wise_act_for_aug,month_wise_act_for_sep,month_wise_act_for_oct,month_wise_act_for_nov,month_wise_act_for_dec,act_total,'','',per_mon_act,mon_todate_act,'',act_made_tea])
-		data.append(['','','','(+/-)',jan_diff,feb_diff,mar_diff,apr_diff,may_diff,jun_diff,jul_diff,aug_diff,sep_diff,oct_diff,nov_diff,dec_diff,tot_diff,'','',per_mon_diff,mon_todate_diff,'',diff_made_tea])
-		data.append([])
+		data.append(['','','',"<b>"+'(+/-)'+"<b>","<b>"+str(jan_diff)+"</b>","<b>"+str(feb_diff)+"</b>","<b>"+str(mar_diff)+"</b>","<b>"+str(apr_diff)+"</b>","<b>"+str(may_diff)+"</b>","<b>"+str(jun_diff)+"</b>","<b>"+str(jul_diff)+"</b>","<b>"+str(aug_diff)+"</b>","<b>"+str(sep_diff)+"</b>","<b>"+str(oct_diff)+"</b>","<b>"+str(nov_diff)+"</b>","<b>"+str(dec_diff)+"</b>","<b>"+str(tot_diff)+"</b>",'','',"<b>"+str(per_mon_diff)+"</b>","<b>"+str(mon_todate_diff)+"</b>",'',"<b>"+str(diff_made_tea)+"</b>"])
+		#data.append([])
 
 	return columns, data
 
@@ -453,12 +455,12 @@ def get_columns():
 	columns.append({
 		"fieldname": "section_area",
 		"label": _("Area"),
-		"fieldtype": "Float",
+		"fieldtype": "Data",
 		"width": 50
 	    })
 
 	columns.append({
-		"fieldname": " ",
+		"fieldname": "blank",
 		"label": _(" "),
 		"options": "Data",
 		"width": 70
@@ -561,7 +563,7 @@ def get_columns():
 
 
 	columns.append({
-		"fieldname": "achv_%",
+		"fieldname": "achv",
 		"label": _("achv %"),
 		"options": "Data",
 		"width": 70
@@ -591,7 +593,7 @@ def get_columns():
 	    })
 	
 	columns.append({
-		"fieldname": "todate_%",
+		"fieldname": "todt",
 		"label": _("todate %"),
 		"options": "Data",
 		"width": 70

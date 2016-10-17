@@ -1,0 +1,115 @@
+<style>
+    .print-format table, .print-format tr,
+    .print-format td, .print-format div, .print-format p {
+        font-family: Monospace;
+        line-height: 200%;
+        vertical-align: middle;
+    }
+
+    @media screen {
+        .print-format {
+            max-width: 13in;
+            padding: 0.25in;
+            min-height: 8.5in;
+        }
+    }
+</style>
+<div style="margin-bottom: 7px;" class="text-center">
+  
+</div>
+
+
+<h3 class="text-center">
+  {%= filters.estate_name %}
+  {%= __(":") %}
+  {%= filters.date %}
+  <br>
+  {%= __("Prune Type :") %}
+  {%= filters.prune_type %}
+  <br>
+  
+</h3>
+<hr>
+
+
+<h2 class="text-center">{%= __("Comparison of Budget and actual Crop") %}</h2>
+<hr>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Sr No.</th>
+      <th>Divison</th>
+      <th>Section </th>
+      <th>Area</th>
+
+      <th> </th>
+      
+        <th>Jan</th>
+      <th>Feb</th>
+      <th>Mar</th> 
+        <th>Apr</th>
+        <th>May</th>
+        <th>Jun</th>
+        <th>Jul</th>
+        <th>Aug</th>
+        <th>Sep</th> 
+        <th>Oct</th> 
+        <th>Nov</th> 
+        <th>Dec</th> 
+
+        <th>Total</th>
+        <th>Achv %</th> 
+        <th>Vac %</th> 
+        <th>Mon</th> 
+        <th>Todate</th> 
+        <th>Todate %</th>
+        <th>Made Tea</th> 
+
+      </tr>
+  </thead>
+
+  <tbody>
+    {% for(var i=0, l=report.data.length; i<l; i++) { %}
+      
+      <tr>
+        <td class="text-center">{%= i %}</td>
+        <td class="text-left">{%= report.data[i].division_name %}</td>
+        <td class="text-left">{%= report.data[i].section_name %}</td>
+        <td class="text-right">{%= report.data[i].section_area %}</td>
+        <td class="text-center">{%= report.data[i].blank %}</td>
+        <td class="text-left">{%= report.data[i].january %}</td>
+        <td class="text-left">{%= report.data[i].february %}</td>
+        <td class="text-left">{%= report.data[i].march %}</td>
+        <td class="text-left">{%= report.data[i].april %}</td>
+        <td class="text-left">{%= report.data[i].may %}</td>
+        <td class="text-left">{%= report.data[i].june %}</td>
+        <td class="text-left">{%= report.data[i].july %}</td>
+        <td class="text-left">{%= report.data[i].august %}</td>
+        <td class="text-left">{%= report.data[i].september %}</td>
+        <td class="text-left">{%= report.data[i].october %}</td>
+        <td class="text-left">{%= report.data[i].november %}</td>
+        <td class="text-left">{%= report.data[i].december %}</td>
+
+        <td class="text-left">{%= report.data[i].total %}</td>
+        <td class="text-left">{%= report.data[i].achv %}</td>
+        <td class="text-left">{%= report.data[i].vac %}</td>
+        <td class="text-left">{%= report.data[i].mon %}</td>
+        <td class="text-left">{%= report.data[i].todate %}</td>
+        <td class="text-left">{%= report.data[i].todt %}</td>
+        <td class="text-left">{%= report.data[i].made_tea %}</td>
+
+
+
+
+
+       
+      </tr>
+
+      {% if report.data[i].blank=="(+/-)" %}
+      <tr><td colspan=24>AAAA</td></tr>
+      {% endif %} 
+    {% } %}
+
+
+  </tbody>
+</table>

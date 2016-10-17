@@ -3,28 +3,18 @@
     "doctype":"Daily Green Leaf",
     "estate_name":"Ghatia Tea Estate",
     "date":"2016-10-08",
-    "dgl_code":"Ghatia Tea Estate:2016-10-08"
-    },
-    {
-    "doctype":"Daily Green Leaf",
-    "estate_name":"Ghatia Tea Estate",
-    "date":"2016-10-10",
-    "dgl_code":"Ghatia Tea Estate:2016-10-10"
-    },
-
-    {
-    "doctype":"Daily Green Leaf",
-    "estate_name":"Ghatia Tea Estate",
-    "date":"2016-10-15",
-    "dgl_code":"Ghatia Tea Estate:2016-10-15",
+    "dgl_code":"Ghatia Tea Estate:2016-10-08",
     "leaf_details":[{
-            "section_id":"KRD015",
-            "date":"2016-10-15",
-            "section_area":1.500,
-            "area":1
+            "section_id":"KRD002",
+            "section_name":"SG 6/8 A      [1932]",
+            "date":"2016-10-08",
+            "section_area":1.99,
+            "area":1,
+            "bush_type":"UP"
 
 
         }]
     }
+    
 
 ]

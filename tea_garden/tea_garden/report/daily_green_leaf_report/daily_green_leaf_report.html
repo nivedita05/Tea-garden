@@ -1,0 +1,139 @@
+<style>
+    .print-format table, .print-format tr,
+    .print-format td, .print-format div, .print-format p {
+        font-family: Monospace;
+        line-height: 200%;
+        vertical-align: middle;
+    }
+
+    @media screen {
+        .print-format {
+            max-width: 13in;
+            padding: 0.25in;
+            min-height: 8.5in;
+        }
+    }
+</style>
+<div style="margin-bottom: 7px;" class="text-center">
+	
+</div>
+
+
+<h3 class="text-center">
+	{%= filters.estate_name %}
+	{%= __(":") %}
+	{%= filters.date %}
+	<br>
+	{%= __("Prune Type :") %}
+	{%= filters.prune_type %}
+	<br>
+	{%= __("Bush Type :") %}
+	{%= filters.bush_type %}
+	<br>
+
+</h3>
+<hr>
+
+
+<h2 class="text-center">{%= __("Daily Green Leaf Report") %}</h2>
+<hr>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+    	<th class="text-center" colspan=4></th>
+    	<th class="text-center" colspan=2>Area Plucked</th>
+    	<th class="text-center" colspan=2>Pluckers</th>
+    	<th class="text-center" colspan=2>Green Leaf</th>
+    	<th class="text-center" colspan=2>Pluckers/Hactor</th>
+    	<th class="text-center" colspan=2>Leaf/Hactor</th>
+    	<th class="text-center" colspan=6></th>
+    <tr>	
+    <tr>
+    	<th>Sr No.</th>
+    	<th>Divison</th>
+    	<th>Section Name</th>
+    	<th>Area</th>
+
+    	<th>Today</th>
+    	<th>Todate</th>
+
+    	<th>Today</th>
+    	<th>Todate</th>   
+
+    	<th>Today</th>
+    	<th>Todate</th>
+
+    	<th>Today</th>
+    	<th>Todate</th> 
+
+    	<th>Today</th>
+    	<th>Todate</th> 
+
+    	<th>Plucking Avg</th> 
+    	<th>Round</th> 
+    	<th>R/Days</th> 
+    	<th>Yield/Hector</th> 
+    	<th>Budget</th> 
+    	<th>% of Yr Crop</th> 
+    	
+
+
+
+
+
+
+
+
+    	
+
+    	
+
+    </tr>
+    </thead>
+    <tbody>
+        {% for(var i=1, l=report.data.length; i<l; i++) { %}
+            <tr>
+            	<td class="text-center">{%= i %}</td>
+             	<td class="text-left">{%= report.data[i].division_name %}</td>
+             	<td class="text-left">{%= report.data[i].section_name %}</td>
+             	<td class="text-right">{%= report.data[i].original_area %}</td>
+             	
+             	<td class="text-right">{%= format_currency(report.data[i].area) %}</td>
+				<td class="text-left">{%= report.data[i].area_plucked_to_date %}</td>
+
+
+             	<td class="text-left">{%= format_currency(report.data[i].plucker_today) %}</td>
+             	<td class="text-left">{%= report.data[i].plucker_todate %}</td>
+
+             	
+
+             	<td class="text-left">{%= format_currency(report.data[i].green_leaf_today) %}</td>
+             	<td class="text-left">{%= report.data[i].green_leaf_todate %}</td>
+
+             	
+
+             	<td class="text-left">{%= format_currency(report.data[i].pluckers_hector_today) %}</td>
+             	<td class="text-left">{%= report.data[i].pluckers_hector_todate %}</td>
+
+             	
+
+             	<td class="text-left">{%= format_currency(report.data[i].green_leaf_hector_today) %}</td>
+             	<td class="text-left">{%= report.data[i].green_leaf_hector_todate %}</td>
+
+             	
+
+             	<td class="text-left">{%= report.data[i].pluc_avg %}</td>
+             	<td class="text-left">{%= report.data[i].rnd %}</td>
+             	<td class="text-left">{%= report.data[i].r_day %}</td>
+             	<td class="text-left">{%= report.data[i].yield_hec %}</td>
+             	<td class="text-left">{%= report.data[i].bud %}</td>
+             	<td class="text-left">{%= report.data[i].yr_crop %}</td>
+             	
+             	
+
+
+
+            </tr> 	
+        {% } %}
+	</tbody>
+</table>

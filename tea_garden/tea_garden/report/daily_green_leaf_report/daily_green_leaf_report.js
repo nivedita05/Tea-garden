@@ -1,6 +1,5 @@
 // Copyright (c) 2016, frappe and contributors
 // For license information, please see license.txt
-
 frappe.query_reports["Daily Green Leaf Report"] = {
 	"filters": [
 	 {
@@ -49,5 +48,6 @@ frappe.query_reports["Daily Green Leaf Report"] = {
 
 		
     }
+    //frappe.query_reports["Daily Green Leaf Report"] = $.extend({},"Ghatia Tea Estate");
 
 

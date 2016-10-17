@@ -12,6 +12,7 @@ from frappe.utils import flt
 from datetime import datetime,timedelta
 import operator
 import calendar
+import os
 from tea_garden.tea_garden.report.comparison_of_budget_and_actual_crop.comparison_of_budget_and_actual_crop import \
 get_month_wise_budget_for_jan,get_month_wise_budget_for_feb,get_month_wise_budget_for_mar,get_month_wise_budget_for_apr,\
 get_month_wise_budget_for_may,get_month_wise_budget_for_jun,get_month_wise_budget_for_jul,get_month_wise_budget_for_aug,\
@@ -24,6 +25,13 @@ def execute(filters=None):
 	columns = get_columns()
 	report_entries = get_report_entries(filters)
 	data = []
+
+	#data.append([])
+	#data.append([])
+
+	#data.append(['','','Date',filters.date,'','Garden',filters.estate_name,'','Bush',filters.bush_type,'','Prune',filters.prune_type])
+	#data.append([])
+
 
 
 
@@ -68,8 +76,8 @@ def execute(filters=None):
 	t_yearly_budget=round(t_year_budget/t_area,2)
 	t_achieve_percentage=round((t_actual/t_yearly_budget)*100,2)
 
-	data.append([])
-	data.append(['Total','','',t_area,'','','Todate Yield',t_actual,t_budget,t_perc,'','','',t_yearly_budget,t_achieve_percentage])	
+	
+	data.append(["<b>"+'Total'+"</b>",'','',"<b>"+str(t_area)+"</b>",'','',"<b>"+'Todate Yield'+"</b>","<b>"+str(t_actual)+"</b>","<b>"+str(t_budget)+"</b>",'','','','',"<b>"+str(t_yearly_budget)+"</b>","<b>"+str(t_achieve_percentage)+"</b>"])	
 	return columns, data
 
 
@@ -235,9 +243,9 @@ def get_columns():
 	    })
 
 	    	columns.append({
-				"fieldname": "plu_minus",
+				"fieldname": "plus_minus",
 				"label": _("(+/-) %"),
-				"fieldtype": "Data",
+				"fieldtype": "Float",
 				"width": 70
 	    })
 
